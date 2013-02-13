@@ -1,0 +1,260 @@
+{% extends "mlist/base.html" %}
+{% load crispy_forms_tags %}
+{% load mlist_extras  %}
+{% load humanize %}
+{% block container %}
+
+<div class="row">
+{% if tmdb %}
+<div class="span4 movie-cover">
+    <img src="{{ tmdb.large_poster_url }}" style="width:370px"/>
+</div>
+<div class="span8">
+{% else %}
+<div class="offset2 span8">
+{% endif %}
+
+<h1 class="page-header movie-title" title="{{mic.movie.title}}">
+    {{mic.movie.get_title}}
+
+    {% if tmdb.tagline %}
+    <br/>
+    <small>{{tmdb.tagline}}</small>
+    {% endif %}
+
+    &nbsp;<span class="badge badge-inverse">{{imdb.rated}}</span>
+</h1>
+
+<div class="row">
+
+    <div class="span4">
+        {% if tmdb or imdb %}
+
+        <h4>Overview</h4>
+
+        <dl class="dl-horizontal movie-details">
+
+            {% if tmdb and imdb.title != tmdb.original_title  %}
+            <dt>Orginal Title:</dt><dd>{{tmdb.original_title}}</dd>
+            {% endif %}
+
+            {% if imdb %}
+                <dt>Released:</dt><dd>{{ imdb.released }} <strong>({{imdb.year}})</strong></dd>
+            {% endif %}
+
+            {% if imdb or tmdb %}
+            <dt>Runtime:</dt><dd>{{imdb.runtime}} ({{tmdb.runtime|default:"Unknown"}} minutes)</dd>
+
+            <dt>Genres:</dt>
+            <dd>
+                {% genre_list imdb.genre tmdb.genres %}
+                {% if tmdb.adult %}
+                    <span class="badge badge-danger">Adult</span>
+                {% endif %}
+            </dd>
+            {% endif %}
+        </dl>
+
+        <dl class="dl-horizontal movie-details">
+            {% if imdb %}
+                <dt>IMDB Rating:</dt><dd title="({{imdb.votes}} votes)">
+                {% movie_stars imdb.rating %}
+                </dd>
+            {% endif %}
+
+            {% if tmdb %}
+            <dt>TMDB Rating:</dt><dd title="({{tmdb.vote_count}} votes)">
+            {% movie_stars tmdb.vote_average %}
+            {% endif %}
+        </dl>
+
+        {% endif %}
+
+        <div class="well well-large">
+
+        <h4>Watch dates:</h4>
+
+        <ul class="mic-list watched-mics">
+            {% for watched_mic in watchedmics %}
+                <li>
+                    {% tag_list watched_mic.tags.all %}
+
+                    <span title="{{ mic.date }}">
+                    {% if watched_mic.id == mic.id %}
+                        <strong>{{ watched_mic.date|naturalday:"DATE_FORMAT" }}</strong>
+                    {% else %}
+                        {{ watched_mic.date.date }}
+                    {% endif %}
+                    </span>
+
+                    <a class="close action-remove text-error" href="{% url delete-movie watched_mic.id %}">&times;</a>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <h5><a class="btn btn-mini" href="{% url add-movie %}?title={{mic.movie.get_title}}&imdb_id={{mic.movie.imdb_id}}"><i class="icon-plus"></i>Add</a></h5>
+
+        <hr />
+
+        <h4>Collections</h4>
+        <ul class="mic-list collection-mics">
+        {% for collection_mic in collections %}
+            <li>
+                <span class="label">{{collection_mic.collection.title}}</span>
+
+                {% if collection_mic.id == mic.id %}
+                    <strong><small>{{collection_mic.date.date}}</small></strong>
+                {% else %}
+                    <small>{{collection_mic.date.date}}</small>
+                {% endif %}
+
+                {% tag_list collection_mic.tags.all %}
+
+                <a class="close action-remove text-error" href="{% url delete-movie collection_mic.id %}">&times;</a>
+            </li>
+        {% endfor %}
+        </ul>
+
+        <h5><a class="btn btn-mini" href="{% url add-movie %}?title={{mic.movie.title}}&imdb_id={{mic.movie.imdb_id}}&collection=0"><i class="icon-plus"></i>Add to collection</a></h5>
+
+        </div>
+    </div>
+
+    {% if imdb or tmdb %}
+    <div class="span4">
+
+        <h4>Details</h4>
+            {% if imdb %}
+                <dl class="dl-horizontal movie-details">
+                    <dt>Director:</dt><dd>{{imdb.director|default:"Unknown"}}</dd>
+                </dl>
+                <dl class="dl-horizontal movie-details">
+                    <dt>Writer:</dt><dd>{% br_list imdb.writer|default:"Unknown" %}</dd>
+                </dl>
+                <dl class="dl-horizontal movie-details">
+                    <dt>Actors:</dt><dd>{% br_list imdb.actors|default:"Unknown" %}</dd>
+                </dl>
+            {% endif %}
+            {% if tmdb %}
+                <dl class="dl-horizontal movie-details">
+                    <dt>Companies:</dt><dd>{% br_list tmdb.production_companies|default:"Unknown" %}</dd>
+                </dl>
+                <dl class="dl-horizontal movie-details">
+                    <dt>Countries:</dt><dd>{% br_list tmdb.productions_countries|default:"Unknown" %}</dd>
+                </dl>
+            {% endif %}
+        </dl>
+
+        {% if tmdb %}
+        <dl class="dl-horizontal movie-details">
+            <dt title="Spoken languages">Languages:</dt><dd>{% br_list tmdb.spoken_languages|default:"Unknown" %}</dd>
+        </dl>
+
+        <dl class="dl-horizontal movie-details">
+            <dt>Homepage:</dt><dd>{{tmdb.homepage|urlizetrunc:40|default:"Unknown"}}</a></dd>
+            <dt>Budget:</dt><dd>{{tmdb.budget|intcomma|default:"Unknown"}}</dd>
+            <dt>Revenue:</dt><dd>{{tmdb.revenue|intcomma|default:"Unknown"}}</dd>
+        </dl>
+        {% endif %}
+
+        <h4>Share</h4>
+        <p>
+            {% if mic.movie.imdb_id %}
+            <script>function fbs_click() {u="http://imdb.com/title/{{mic.movie.imdb_id}}";t=document.title;window.open('http://www.facebook.com/sharer.php?u='+encodeURIComponent(u)+'&t='+encodeURIComponent(t),'sharer','toolbar=0,status=0,width=626,height=436');return false;}</script>
+            <a rel="nofollow" href="http://www.facebook.com/sharer.php?u=http://imdb.com/title/{{mic.movie.imdb_id}}" onclick="return fbs_click()" target="_blank" class="fb_share_link btn btn-medium btn-primary"><i class="icon-share icon-white"></i> Share on Facebook</a>
+            {% endif %}
+        </p>
+        <br/>
+    </div>
+    {% endif %}
+</div>
+
+    <div class="row">
+    {% if not imdb %}
+    <div class="span4">
+        <div class="alert alert-error alert-block">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <h4>IMDB information not available</h4>
+            <p>
+                Fetch IMDB information. Note that if not IMDB ID associated with movie, then fetch is based on movie title.
+            </p>
+            <a href="{% url fetch-imdb mic.movie.id %}" class="btn btn-danger">Fetch IMDB info</a>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if not tmdb %}
+    <div class="span4">
+        <div class="alert alert-error alert-block">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            <h4>TMDB  information not available</h4>
+            <p>
+                    Press button below to fetch movie from TMDB.
+            </p>
+            <p>
+                <strong>Note: TMDB requires IMDB ID. (To fetch IMDB ID, press above 'Fetch IMDB info' first.).</strong>
+            </p>
+            <a href="{% url fetch-tmdb mic.movie.id %}" class="btn btn-danger">Fetch TMDB info</a>
+        </div>
+    </div>
+    {% endif%}
+    </div>
+
+
+</div>
+
+</div>
+
+<div class="row">
+
+{% if tmdb %}
+<div class="span8 offset4" style="text-align: justify">
+{% else %}
+<div class="offset2 span8">
+{% endif %}
+
+
+    <div class="row">
+
+    {% if tmdb %}
+    <div class="span6">
+        <h5>Overview</h5>
+        <blockquote class="muted span6"><small>{{tmdb.overview}}</small></blockquote>
+    </div>
+    {% endif %}
+
+
+    {% if imdb %}
+    <div class="span6">
+        <h5>Plot</h5>
+        <blockquote class="muted span6"><small>{{imdb.plot}}</small></blockquote>
+    </div>
+    {% endif %}
+
+    </div>
+
+    <hr />
+
+    <p class="muted">
+        <i><small>
+            {% if imdb %}
+            Last IMDB Update: {{imdb.update_date.date}} &nbsp; &nbsp; &nbsp; &nbsp;
+            {% endif %}
+            {% if tmdb %}
+            Last TMDB Update: {{tmdb.update_date.date}}
+            {% endif %}
+
+            <h5><small>
+                <a class="pull-left" href="{% url update-movie mic.id %}">Edit</a>
+                {% if mic.movie.imdb_id %}
+                <span class="muted pull-right">[{{mic.movie.imdb_id}}]</span>
+                {% endif %}
+            </small></h5>
+        </small></i>
+    </p>
+</div>
+</div>
+
+</div> <!-- Span8 -!>
+
+{% endblock %}

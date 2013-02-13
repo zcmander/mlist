@@ -1,0 +1,48 @@
+{% load static from staticfiles %}
+{% load mlist_extras %}
+{% load humanize %}
+{% load cache %}
+
+{% cache 3600 movie-thumbnail mic.id%}
+{% with mic.movie as movie %}
+<div class="thumbnail">
+    <a href="{% url detail-movie mic.id %}">
+        {% if mic.movie.imdb_id %}
+          {% if mic.movie.thumbnail %}
+            <img class="media-object" style="max-height:228px; width: auto;" src="{{ mic.movie.thumbnail }}">
+          {% else %}
+            <img class="media-object" src="{% static "img/no-cover.png" %}">
+          {% endif %}
+        {% else %}
+          <img class="media-object" src="{% static "img/no-cover.png" %}">
+        {% endif %}
+    </a>
+
+
+    <div class="caption">
+        <h5 class="media-heading">
+            <a href="{% url detail-movie mic.id %}">
+                {{ movie.get_title }} <small>{{ movie.year }}</small>
+            </a>
+        </h5>
+
+        <p>
+            <small>
+            <strong>Date:</strong> <span title="{{ mic.date|date }}">{{ mic.date|naturalday:"SHORT_DATE_FORMAT" }}</span><br />
+            {% tag_list mic.tags.all %}
+            {% if not movie.imdb_id %}
+              <span class="badge badge-important" title="No IMDB ID set for this movie."><i class="icon-flag icon-white"></i> IMDB</span>
+            {% else %}
+              {% if not movie.has_imdb %}
+                <span class="badge badge-warning" title="No TMDB information available."><i class="icon-flag icon-white"></i> IMDB</span>
+              {% endif %}
+              {% if not movie.has_tmdb %}
+                <span class="badge badge-warning" title="No TMDB information available."><i class="icon-flag icon-white"></i> TMDB</span>
+              {% endif %}
+            {% endif %}
+            </small>
+        </p>
+    </div>
+</div>
+{% endwith %}
+{% endcache %}

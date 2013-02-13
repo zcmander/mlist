@@ -1,0 +1,22 @@
+{% extends "mlist/base.html" %}
+
+{% block container %}
+
+<div class="span4 offset4">
+
+<form class="form-signin" action="{% url authenticate %}" method="POST">
+    {% csrf_token %}
+    <h2 class="form-signin-heading">Please sign in</h2>
+    <input type="text" name="username" class="input-block-level" placeholder="Username">
+    <input type="password" name="password" class="input-block-level" placeholder="Password">
+    <div class="row-fluid">
+    <label class="checkbox span6">
+        <input type="checkbox" value="remember-me"> Remember me
+    </label>
+    <button class="btn btn-medium btn-primary span6" type="submit">Sign in</button>
+    </div>
+</form>
+
+</div>
+
+{% endblock %}

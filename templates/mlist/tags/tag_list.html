@@ -1,0 +1,10 @@
+{% for tag in tags %}
+    <span class="badge badge-info">
+        {% if tag.scope == 'media' %}
+            <i class="icon-film icon-white"></i>
+        {% else %}
+            <i class="icon-bookmark icon-white"></i>
+        {% endif %}
+        {{ tag.value }}
+    </span>
+{% endfor %}

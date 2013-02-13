@@ -1,0 +1,156 @@
+{% load static from staticfiles %}
+{% load mlist_extras %}
+
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>MList</title>
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <meta name="viewport" content="width=device-width">
+
+    <link rel="stylesheet/less" href="{% static "less/style.less"%}">
+    <script src="{% static "js/libs/less-1.3.0.min.js" %}"></script>
+
+    <!-- Use SimpLESS (Win/Linux/Mac) or LESS.app (Mac) to compile your .less files
+    to style.css, and replace the 2 lines above by this one:-->
+
+    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}" />
+    <link rel="stylesheet" href="{% static "css/bootstrap-responsive.min.css" %}" />
+    <link rel="stylesheet" href="{% static "css/bootstrap-tagmanager.css" %}" />
+
+    <link rel="stylesheet" href="{% static "css/mlist.css" %}" />
+
+    <script src="{% static "js/libs/modernizr-2.5.3-respond-1.1.0.min.js" %}"></script>
+</head>
+<body
+{% if mic and tmdb and tmdb.backdrop_url %}
+style='background-size: cover; background-position-x: center; background-image: url("{{tmdb.backdrop_url}}")'
+{% else %}
+style='background-image: url("{% static "img/gradient_squares.png" %}")'
+{% endif %}>
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          {% if user.is_authenticated %}
+          <a class="brand" href="{% url list-movies %}">MList</a>
+          {% else %}
+          <a class="brand" href="{% url login %}">MList</a>
+          {% endif %}
+          <div class="nav-collapse">
+            <ul class="nav">
+
+              {% if user.is_authenticated %}
+              <li class="dropdown">
+                <a href="{% url list-movies %}" class="dropdown-toggle" data-toggle="dropdown">
+                   Collections
+                  <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    {% collection_list user %}
+                </ul>
+              </li>
+
+              <li><a href="{% url add-movie %}">Add</a></li>
+              {% endif %}
+            </ul>
+
+            <ul class="nav pull-right">
+              {% if user.is_authenticated %}
+                <li class="dropdown">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    {{ user.username }}
+                    <b class="caret"></b>
+                  </a>
+                  <ul class="dropdown-menu">
+                    <li><a href="{% url statistics %}">Statistics</a></li>
+                    <li><a href="{% url settings %}">Settings</a></li>
+                    <li><a href="{% url import-movies %}">Import / Export</a></li>
+                    <li class="divider"></li>
+                    <li><a href="{% url logout %}">Log out</a></li>
+                  </ul>
+                </li>
+              {% endif %}
+            </ul>
+
+            {% if user.is_authenticated %}
+            <form class="navbar-search pull-right" method="get" action="{% url search %}">
+              <input type="text" name="q" class="search-query" placeholder="Search">
+            </form>
+            {% endif %}
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container mlist-container
+    {% if mic and tmdb and tmdb.backdrop_url %}
+    img-polaroid
+    {% endif %}">
+
+      {% if messages %}
+      {% for message in messages %}
+          <div class="alert {{ message.tags }}">
+            <button type="button" class="close" data-dismiss="alert">&times;</button>
+            {% if 'safe' in message.tags %}
+                {{ message|safe }}
+            {% else %}
+                {{ message }}
+            {% endif %}
+          </div>
+      {% endfor %}
+      {% endif %}
+
+{% block container %}
+
+{% endblock %}
+
+    </div> <!-- /container -->
+
+<!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>-->
+<script>window.jQuery || document.write('<script src="{% static "js/libs/jquery-1.7.2.min.js" %}"><\/script>')</script>
+<script src="{% static "js/bootstrap.min.js" %}"></script>
+<script src="{% static "js/bootstrap-typeahead-fixd.js" %}"></script>
+<script src="{% static "js/bootstrap-tagmanager.js" %}"></script>
+<script src="{% static "js/iso8601.min.js" %}"></script>
+<script src="{% static "js/script.js" %}"></script>
+<script type="text/javascript">
+$(function() {
+  mlist.init({
+    urls: {
+        export_movies: "{% url export-movies %}",
+        adv_export_movies: "{% url adv-export-movies %}",
+        tag_list: "{% url ajax_taglist %}",
+    }
+  });
+});
+</script>
+
+{% if tmdb.backdrop_orginal_url %}
+<script type="text/javascript">
+  $(function() {
+    mlist.change_background({
+      url: "{{tmdb.backdrop_orginal_url}}"
+    });
+  });
+</script>
+{% endif %}
+
+{% block script %}
+
+{% endblock %}
+</html>

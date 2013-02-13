@@ -1,0 +1,37 @@
+{% extends "mlist/base.html" %}
+{% load static from staticfiles %}
+{% load mlist_extras %}
+
+{% block container %}
+
+    <ul class="thumbnails movielist">
+    {% for mic in movies %}
+        <li class="span2">
+          {% include "mlist/includes/movie_thumbnail.html" %}
+        </li>
+    {% endfor %}
+    </ul>
+
+
+ {% if is_paginated %}
+    <ul class="pager">
+      {% if page_obj.has_previous %}
+      <li class="previous">
+        <a href="{% url list-movies collection_name %}?page={{ page_obj.previous_page_number }}">&larr; Newer</a>
+      </li>
+      {% endif %}
+
+      <li class="current">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+      </li>
+
+      {% if page_obj.has_next %}
+      <li class="next">
+        <a href="{% url list-movies collection_name %}?page={{ page_obj.next_page_number }}">Older &rarr;</a>
+      </li>
+      {% endif %}
+    </ul>
+</div>
+{% endif %}
+
+{% endblock %}

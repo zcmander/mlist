@@ -1,0 +1,86 @@
+{% extends "mlist/base.html" %}
+{% load static from staticfiles %}
+{% load mlist_extras %}
+
+{% block container %}
+    <h1 class="page-header">Statistics</h1>
+
+    <div class="row">
+    <div class="span4 offset4">
+      <div class="alert alert-info js-loading">
+        <p style="text-align:center">Exporting movies...</p>
+      </div>
+    </div>
+  </div>
+
+    <ul class="thumbnails js-results" style="display:none">
+      <li class="span6">
+        <div class="thumbnail">
+          <div id="chart-media-distribution"></div>
+          <div class="caption">
+            <h4>Tag distribution</h4>
+          </div>
+        </div>
+      </li>
+      <li class="span6">
+        <div class="thumbnail">
+          <div id="chart-genre-distribution"></div>
+          <div class="caption">
+            <h4>Genre distribution</h4>
+          </div>
+        </div>
+      </li>
+      <li class="span12">
+        <div class="thumbnail">
+          <div id="chart-watched-movies"></div>
+          <div class="caption">
+            <h4>Watched movies</h4>
+            Samples per:
+            <div class="btn-group samplechooser">
+                <button class="btn">Year</button>
+                <button class="btn active">Month</button>
+                <button class="btn">Week</button>
+            </div>
+          </div>
+        </div>
+      </li>
+      <li class="span12">
+        <div class="thumbnail">
+          <div id="chart-media-historical-distribution"></div>
+          <div class="caption">
+            <h4>Historical distribution</h4>
+
+            Samples per:
+            <div class="btn-group samplechooser">
+                <button class="btn">Year</button>
+                <button class="btn active">Month</button>
+                <button class="btn">Week</button>
+            </div>
+          </div>
+        </div>
+      </li>
+
+      <li class="span12">
+        <div class="thumbnail">
+          <div id="chart-watchdate-vs-movieyear"></div>
+          <div class="caption">
+            <h4>Watch date vs. movie release date</h4>
+          </div>
+        </div>
+      </li>
+    </ul>
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart", "table"]});
+    </script>
+    <script type="text/javascript" src="{% static "js/jquery.csv-0.71.min.js" %}"></script>
+    <script type="text/javascript" src="{% static "js/mlist-plot.js" %}"></script>
+    <script type="text/javascript">
+    $(function() {
+      mlist.statistics.init();
+    });
+    </script>
+{% endblock %}

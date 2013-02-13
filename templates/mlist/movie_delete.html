@@ -1,0 +1,36 @@
+{% extends "mlist/base.html" %}
+{% load crispy_forms_tags %}
+{% load mlist_extras %}
+{% load l10n %}
+{% block container %}
+
+<form action="#" method="POST" class="form-horizontal span6 offset3">
+  {% csrf_token %}
+  <fieldset>
+    <legend>Are you sure you want to delete this movie?</legend>
+
+    <p>
+    You are about to delete this movie record:
+    </p>
+
+    <dl class="dl-horizontal">
+    <dt>Title:</dd>
+        <dd>{{mic.movie.title}}</dd>
+    <dt>Collection:</dt>
+        <dd><span class="label">{{mic.collection.title}}</span></dd>
+    <dt>Date:</dt>
+        <dd>{{mic.date}}</dd>
+    <dt>Tags:</dt>
+        <dd>
+        {% tag_list mic.tags.all %}
+        </dd>
+    </dl>
+
+    <div class="form-actions">
+        <button name="submit" type="submit" class="btn btn-danger"><i class="icon-remove icon-white"></i> Delete</button>
+        <a href="{% url detail-movie mic.id %}" class="btn">Cancel</a>
+    </div>
+  </fieldset>
+</form>
+
+{% endblock %}

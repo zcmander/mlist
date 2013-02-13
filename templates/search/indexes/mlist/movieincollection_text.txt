@@ -1,0 +1,3 @@
+{{ object.movie.title }}
+{{ object.movie.get_title }}
+{{ object.movie.imdb_id }}
