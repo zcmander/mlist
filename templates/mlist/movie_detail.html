@@ -87,12 +87,12 @@
                     {% endif %}
                     </span>
 
-                    <a class="close action-remove text-error" href="{% url delete-movie watched_mic.id %}">&times;</a>
+                    <a class="close action-remove text-error" href="{% url 'delete-movie' watched_mic.id %}">&times;</a>
                 </li>
             {% endfor %}
         </ul>
 
-        <h5><a class="btn btn-mini" href="{% url add-movie %}?title={{mic.movie.get_title}}&imdb_id={{mic.movie.imdb_id}}"><i class="icon-plus"></i>Add</a></h5>
+        <h5><a class="btn btn-mini" href="{% url 'add-movie' %}?title={{mic.movie.get_title}}&imdb_id={{mic.movie.imdb_id}}"><i class="icon-plus"></i>Add</a></h5>
 
         <hr />
 
@@ -110,12 +110,12 @@
 
                 {% tag_list collection_mic.tags.all %}
 
-                <a class="close action-remove text-error" href="{% url delete-movie collection_mic.id %}">&times;</a>
+                <a class="close action-remove text-error" href="{% url 'delete-movie' collection_mic.id %}">&times;</a>
             </li>
         {% endfor %}
         </ul>
 
-        <h5><a class="btn btn-mini" href="{% url add-movie %}?title={{mic.movie.title}}&imdb_id={{mic.movie.imdb_id}}&collection=0"><i class="icon-plus"></i>Add to collection</a></h5>
+        <h5><a class="btn btn-mini" href="{% url 'add-movie' %}?title={{mic.movie.title}}&imdb_id={{mic.movie.imdb_id}}&collection=0"><i class="icon-plus"></i>Add to collection</a></h5>
 
         </div>
     </div>
@@ -178,7 +178,7 @@
             <p>
                 Fetch IMDB information. Note that if not IMDB ID associated with movie, then fetch is based on movie title.
             </p>
-            <a href="{% url fetch-imdb mic.movie.id %}" class="btn btn-danger">Fetch IMDB info</a>
+            <a href="{% url 'fetch-imdb' mic.movie.id %}" class="btn btn-danger">Fetch IMDB info</a>
         </div>
     </div>
     {% endif %}
@@ -194,7 +194,7 @@
             <p>
                 <strong>Note: TMDB requires IMDB ID. (To fetch IMDB ID, press above 'Fetch IMDB info' first.).</strong>
             </p>
-            <a href="{% url fetch-tmdb mic.movie.id %}" class="btn btn-danger">Fetch TMDB info</a>
+            <a href="{% url 'fetch-tmdb' mic.movie.id %}" class="btn btn-danger">Fetch TMDB info</a>
         </div>
     </div>
     {% endif%}
@@ -245,7 +245,7 @@
             {% endif %}
 
             <h5><small>
-                <a class="pull-left" href="{% url update-movie mic.id %}">Edit</a>
+                <a class="pull-left" href="{% url 'update-movie' mic.id %}">Edit</a>
                 {% if mic.movie.imdb_id %}
                 <span class="muted pull-right">[{{mic.movie.imdb_id}}]</span>
                 {% endif %}

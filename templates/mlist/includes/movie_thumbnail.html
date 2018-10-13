@@ -6,7 +6,7 @@
 {% cache 3600 movie-thumbnail mic.id%}
 {% with mic.movie as movie %}
 <div class="thumbnail">
-    <a href="{% url detail-movie mic.id %}">
+    <a href="{% url 'detail-movie' mic.id %}">
         {% if mic.movie.imdb_id %}
           {% if mic.movie.thumbnail %}
             <img class="media-object" style="max-height:228px; width: auto;" src="{{ mic.movie.thumbnail }}">
@@ -21,7 +21,7 @@
 
     <div class="caption">
         <h5 class="media-heading">
-            <a href="{% url detail-movie mic.id %}">
+            <a href="{% url 'detail-movie' mic.id %}">
                 {{ movie.get_title }} <small>{{ movie.year }}</small>
             </a>
         </h5>

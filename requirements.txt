@@ -1,0 +1,12 @@
+django
+django-crispy-forms
+django-ember
+django-tastypie
+django-taggit
+django-debug-toolbar
+requests
+Whoosh
+mimeparse
+pytz
+git+https://github.com/toastdriven/django-haystack.git@master#egg=django-haystack
+simplejson

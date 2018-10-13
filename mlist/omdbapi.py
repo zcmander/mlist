@@ -8,6 +8,8 @@ class BackendOMDB:
     Backend for Internet Movie Database, using OMDB Api
     """
 
+    APIKEY = 'da2a56d7'
+
     __base_url = "http://www.omdbapi.com/"
 
     def _create_url(self, title=None, imdb_id=None):
@@ -17,9 +19,9 @@ class BackendOMDB:
         url = self.__base_url
 
         if imdb_id != None:
-            url += "?i=" + urllib.quote(imdb_id)
+            url += "?i=" + urllib.quote(imdb_id) + "&apikey=" + self.APIKEY
         elif title != None:
-            url += "?t=" + urllib.quote(title)
+            url += "?t=" + urllib.quote(title) + "&apikey=" + self.APIKEY
         else:
             raise Exception('imdb_id OR title MUST be provided')
 

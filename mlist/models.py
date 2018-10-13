@@ -36,10 +36,9 @@ class IMDBMovie(models.Model):
         self = cls()
         if title or imdb_id:
             r = BackendOMDB().get_data(title, imdb_id)
-
             self.imdb_id = r.get('imdb_id')
             self.title = r.get('title')
-            self.year = r.get('year')
+            self.year = r.get('year')[:4]
             self.rated = r.get('rated')
             self.released = r.get('released')
             self.runtime = r.get('runtime')
@@ -93,6 +92,7 @@ class TMDBMovie(models.Model):
         if tmdb_movies.get_total_results() > 0:
             if imdb_id:
                 for movie in tmdb_movies:
+                    print(movie.get_imdb_id(), imdb_id)
                     if movie.get_imdb_id() == imdb_id:
                         tmdb_movie = movie
             else:
@@ -215,8 +215,3 @@ class MovieInCollection(models.Model):
 
 admin.site.register(TMDBMovie)
 admin.site.register(IMDBMovie)
-
-# See admin.py
-#admin.site.register(Movie)
-#admin.site.register(MovieInCollection)
-#admin.site.register(Collection)

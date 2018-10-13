@@ -119,8 +119,8 @@ class Movie(Core):
         self.movie_id = movie_id
         self.update_configuration()
         self.movies = self.getJSON(config['urls']['movie.info'] % self.movie_id)
-        #import pprint
-        #pprint.pprint(self.movies)
+        import pprint
+        pprint.pprint(self.movies)
 
     def is_adult(self):
         return self.movies['adult']

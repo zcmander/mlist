@@ -1,5 +1,6 @@
 # based on: http://www.djangosnippets.org/snippets/779/
 from django.template import Library, Node, TemplateSyntaxError
+from django.utils.safestring import mark_safe
 from mlist.models import Collection
 
 register = Library()
@@ -127,7 +128,7 @@ def movie_stars(value):
     star = u'<i class="icon-star"></i>'
     #star_empty = u'<i class="icon-star-empty"></i>'
     star_empty = ''
-    return star * int(converted_value) + star_empty * (10 - int(converted_value)) + u" " + string_converted_value
+    return mark_safe(star * int(converted_value) + star_empty * (10 - int(converted_value)) + u" " + string_converted_value)
 
 
 # app/templatetags/basic.py

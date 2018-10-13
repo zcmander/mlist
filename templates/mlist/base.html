@@ -1,14 +1,8 @@
 {% load static from staticfiles %}
 {% load mlist_extras %}
-
-<!doctype html>
-<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
-<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
-<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<html>
 <head>
     <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 
     <title>MList</title>
     <meta name="description" content="">
@@ -47,16 +41,16 @@ style='background-image: url("{% static "img/gradient_squares.png" %}")'
             <span class="icon-bar"></span>
           </a>
           {% if user.is_authenticated %}
-          <a class="brand" href="{% url list-movies %}">MList</a>
+          <a class="brand" href="{% url 'list-movies' %}">MList</a>
           {% else %}
-          <a class="brand" href="{% url login %}">MList</a>
+          <a class="brand" href="{% url 'login' %}">MList</a>
           {% endif %}
           <div class="nav-collapse">
             <ul class="nav">
 
               {% if user.is_authenticated %}
               <li class="dropdown">
-                <a href="{% url list-movies %}" class="dropdown-toggle" data-toggle="dropdown">
+                <a href="{% url 'list-movies' %}" class="dropdown-toggle" data-toggle="dropdown">
                    Collections
                   <b class="caret"></b>
                 </a>
@@ -65,7 +59,7 @@ style='background-image: url("{% static "img/gradient_squares.png" %}")'
                 </ul>
               </li>
 
-              <li><a href="{% url add-movie %}">Add</a></li>
+              <li><a href="{% url 'add-movie' %}">Add</a></li>
               {% endif %}
             </ul>
 
@@ -77,18 +71,18 @@ style='background-image: url("{% static "img/gradient_squares.png" %}")'
                     <b class="caret"></b>
                   </a>
                   <ul class="dropdown-menu">
-                    <li><a href="{% url statistics %}">Statistics</a></li>
-                    <li><a href="{% url settings %}">Settings</a></li>
-                    <li><a href="{% url import-movies %}">Import / Export</a></li>
+                    <li><a href="{% url 'statistics' %}">Statistics</a></li>
+                    <li><a href="{% url 'settings' %}">Settings</a></li>
+                    <li><a href="{% url 'import-movies' %}">Import / Export</a></li>
                     <li class="divider"></li>
-                    <li><a href="{% url logout %}">Log out</a></li>
+                    <li><a href="{% url 'logout' %}">Log out</a></li>
                   </ul>
                 </li>
               {% endif %}
             </ul>
 
             {% if user.is_authenticated %}
-            <form class="navbar-search pull-right" method="get" action="{% url search %}">
+            <form class="navbar-search pull-right" method="get" action="{% url 'search' %}">
               <input type="text" name="q" class="search-query" placeholder="Search">
             </form>
             {% endif %}
@@ -132,9 +126,9 @@ style='background-image: url("{% static "img/gradient_squares.png" %}")'
 $(function() {
   mlist.init({
     urls: {
-        export_movies: "{% url export-movies %}",
-        adv_export_movies: "{% url adv-export-movies %}",
-        tag_list: "{% url ajax_taglist %}",
+        export_movies: "{% url 'export-movies' %}",
+        adv_export_movies: "{% url 'adv-export-movies' %}",
+        tag_list: "{% url 'ajax_taglist' %}",
     }
   });
 });
@@ -153,4 +147,5 @@ $(function() {
 {% block script %}
 
 {% endblock %}
+</body>
 </html>

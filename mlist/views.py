@@ -245,6 +245,7 @@ class MovieList(ListView):
     paginate_by = 6 * 6
 
     def get_queryset(self):
+        print(self.kwargs)
         collection = Collection.objects.filter(user=self.request.user, title=self.kwargs['collection'])[:1].get()
         return collection.movieincollection_set.order_by('-date').select_related().all()
 
@@ -381,7 +382,7 @@ def logout_view(request):
 def login_view(request):
     if request.user and request.user.is_authenticated():
         return redirect(reverse('list-movies'))
-    return render_to_response("mlist/login.html", RequestContext(request))
+    return render_to_response("mlist/login.html")
 
 
 @login_required()

@@ -4,7 +4,7 @@
 
 <div class="span4 offset4">
 
-<form class="form-signin" action="{% url authenticate %}" method="POST">
+<form class="form-signin" action="{% url 'authenticate' %}" method="POST">
     {% csrf_token %}
     <h2 class="form-signin-heading">Please sign in</h2>
     <input type="text" name="username" class="input-block-level" placeholder="Username">

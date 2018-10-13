@@ -1,10 +1,11 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import include, url
 from django.contrib.auth.decorators import login_required, permission_required
 
 from django.conf import settings
 
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
+from django.views.static import serve
 
 from mlist.views import (
     MovieCreate,
@@ -22,9 +23,11 @@ from mlist.views import (
 from mlist.forms import MovieSearchForm
 from haystack.views import search_view_factory
 
+from mlist import views
+
 admin.autodiscover()
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^list$', login_required(MovieList.as_view()), {'collection': 'watched'}, name="list-movies"),
     url(r'^list/(?P<collection>.*)/$', login_required(MovieList.as_view()), name="list-movies"),
 
@@ -36,41 +39,35 @@ urlpatterns = patterns('',
 
     url(r'^delete-collection/(?P<pk>\d+)/$', login_required(CollectionDelete.as_view()), name="delete-collection"),
     url(r'^create-collection$',              login_required(CollectionCreate.as_view()), name="create-collection"),
-)
+]
 
-urlpatterns += patterns('mlist.views',
-    url(r'^$', 'login_view', name="login"),
-    url(r'^auth', 'authenticate_view', name="authenticate"),
-    url(r'^logout$', 'logout_view', name="logout"),
-    url(r'^export$', 'export_view', name="export-movies"),
-    url(r'^export2$', 'adv_export_view', name="adv-export-movies"),
-    url(r'^settings$', 'settings_view', name="settings"),
-    url(r'^statistics$', 'statistics_view', name="statistics"),
+urlpatterns += [
+    url(r'^$', views.login_view, name="login"),
+    url(r'^auth', views.authenticate_view, name="authenticate"),
+    url(r'^logout$', views.logout_view, name="logout"),
+    url(r'^export$', views.export_view, name="export-movies"),
+    url(r'^export2$', views.adv_export_view, name="adv-export-movies"),
+    url(r'^settings$', views.settings_view, name="settings"),
+    url(r'^statistics$', views.statistics_view, name="statistics"),
 
-    url(r'^merge-movie/(?P<pk>\d+)/$', 'merge_movie_view', name="merge-movie"),
+    url(r'^merge-movie/(?P<pk>\d+)/$', views.merge_movie_view, name="merge-movie"),
 
-    url(r'^fetch-imdb/(?P<pk>\d+)/$', 'fetch_imdb_view', name="fetch-imdb"),
-    url(r'^fetch-tmdb/(?P<pk>\d+)/$', 'fetch_tmdb_view', name="fetch-tmdb"),
-    url(r'^ajax/tag-list$', 'ajax_taglist_view', name="ajax_taglist"),
-)
+    url(r'^fetch-imdb/(?P<pk>\d+)/$', views.fetch_imdb_view, name="fetch-imdb"),
+    url(r'^fetch-tmdb/(?P<pk>\d+)/$', views.fetch_tmdb_view, name="fetch-tmdb"),
+    url(r'^ajax/tag-list$', views.ajax_taglist_view, name="ajax_taglist"),
+]
 
 # Haystack
-urlpatterns += patterns('',
+urlpatterns += [
     url(r'^search/', login_required(search_view_factory(
         view_class=MovieSearch,
         form_class=MovieSearchForm,
         results_per_page=6 * 6,
     )), name='search'),
-)
+]
 
-# django-js-utils
-urlpatterns += patterns('',
-    (r'^jsurls.js$', 'django_js_utils.views.jsurls', {}, 'jsurls'),
-)
-
-urlpatterns += patterns('',
-
-    (r'^static/(?P<path>.*)$', 'django.views.static.serve',
+urlpatterns += [
+    url(r'^static/(?P<path>.*)$', serve,
         {'document_root': settings.STATIC_ROOT}),
     # Examples:
     # url(r'^$', 'mlist.views.home', name='home'),
@@ -81,4 +78,11 @@ urlpatterns += patterns('',
 
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
-)
+]
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        url(r'^__debug__/', include(debug_toolbar.urls)),
+
+    ] + urlpatterns
