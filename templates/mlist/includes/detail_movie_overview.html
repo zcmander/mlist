@@ -1,0 +1,54 @@
+    {% load mlist_extras  %}
+
+    {% if tmdb or imdb %}
+    <div class="movie-block">
+
+        <h4>Overview</h4>
+
+        <dl class="dl-horizontal movie-details">
+
+            {% if tmdb and imdb.title != tmdb.original_title  %}
+            <dt>Orginal Title:</dt><dd>{{tmdb.original_title}}</dd>
+            {% endif %}
+
+            {% if imdb %}
+                <dt>Released:</dt><dd>{{ imdb.released }} <strong>({{imdb.year}})</strong></dd>
+            {% endif %}
+
+            {% if imdb or tmdb %}
+            <dt>Runtime:</dt><dd>{{imdb.runtime}} ({{tmdb.runtime|default:"Unknown"}} minutes)</dd>
+
+            <dt>Genres:</dt>
+            <dd>
+                {% genre_list imdb.genre tmdb.genres %}
+                {% if tmdb.adult %}
+                    <span class="badge badge-danger">Adult</span>
+                {% endif %}
+            </dd>
+            {% endif %}
+        </dl>
+
+        <dl class="dl-horizontal movie-details">
+            {% if imdb %}
+                <dt>IMDB Rating:</dt><dd title="({{imdb.votes}} votes)">
+                {% movie_stars imdb.rating %}
+                </dd>
+            {% endif %}
+
+            {% if tmdb %}
+            <dt>TMDB Rating:</dt><dd title="({{tmdb.vote_count}} votes)">
+            {% movie_stars tmdb.vote_average %}
+            {% endif %}
+        </dl>
+    </div>
+
+    <div class="movie-block">
+        <h4>Share</h4>
+        <p>
+            {% if mic.movie.imdb_id %}
+            <script>function fbs_click() {u="http://imdb.com/title/{{mic.movie.imdb_id}}";t=document.title;window.open('http://www.facebook.com/sharer.php?u='+encodeURIComponent(u)+'&t='+encodeURIComponent(t),'sharer','toolbar=0,status=0,width=626,height=436');return false;}</script>
+            <a rel="nofollow" href="http://www.facebook.com/sharer.php?u=http://imdb.com/title/{{mic.movie.imdb_id}}" onclick="return fbs_click()" target="_blank" class="fb_share_link btn btn-medium btn-primary"><i class="icon-share icon-white"></i> Share on Facebook</a>
+            {% endif %}
+        </p>
+    </div>
+    {% endif %}

@@ -1,0 +1,38 @@
+{% load mlist_extras  %}
+{% load humanize %}
+
+<div class="movie-block">
+
+    <h4>Details</h4>
+    {% if imdb %}
+        <dl class="dl-horizontal movie-details">
+            <dt>Director:</dt><dd>{{imdb.director|default:"Unknown"}}</dd>
+        </dl>
+        <dl class="dl-horizontal movie-details">
+            <dt>Writer:</dt><dd>{% br_list imdb.writer|default:"Unknown" %}</dd>
+        </dl>
+        <dl class="dl-horizontal movie-details">
+            <dt>Actors:</dt><dd>{% br_list imdb.actors|default:"Unknown" %}</dd>
+        </dl>
+    {% endif %}
+    {% if tmdb %}
+        <dl class="dl-horizontal movie-details">
+            <dt>Companies:</dt><dd>{% br_list tmdb.production_companies|default:"Unknown" %}</dd>
+        </dl>
+        <dl class="dl-horizontal movie-details">
+            <dt>Countries:</dt><dd>{% br_list tmdb.productions_countries|default:"Unknown" %}</dd>
+        </dl>
+    {% endif %}
+
+    {% if tmdb %}
+    <dl class="dl-horizontal movie-details">
+        <dt title="Spoken languages">Languages:</dt><dd>{% br_list tmdb.spoken_languages|default:"Unknown" %}</dd>
+    </dl>
+
+    <dl class="dl-horizontal movie-details">
+        <dt>Homepage:</dt><dd>{{tmdb.homepage|urlizetrunc:40|default:"Unknown"}}</a></dd>
+        <dt>Budget:</dt><dd>{{tmdb.budget|intcomma|default:"Unknown"}}</dd>
+        <dt>Revenue:</dt><dd>{{tmdb.revenue|intcomma|default:"Unknown"}}</dd>
+    </dl>
+    {% endif %}
+</div>

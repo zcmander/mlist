@@ -1,0 +1,20 @@
+    <div class="movie-block">
+        <h4>Admin</h4>
+        <dl class="dl-horizontal movie-meta">
+            {% if mic.movie.imdb_id %}
+                <dt>IMDB ID:</dt><dd>{{mic.movie.imdb_id}}</dd>
+            {% endif %}
+            {% if imdb %}
+                <dt>Last IMDB Update:</dt> <dd>{{imdb.update_date.date}}</dd>
+            {% endif %}
+            {% if tmdb %}
+            <dt>Last TMDB Update:</dt><dd>{{tmdb.update_date.date}}</dd>
+            {% endif %}
+        </dl>
+
+        <a class="btn btn-mini" href="{% url "update-movie" mic.id %}">
+            <i class="icon-pencil"></i>
+            Edit movie
+        </a>
+    </p>
+    </div>

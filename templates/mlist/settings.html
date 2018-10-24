@@ -24,28 +24,28 @@
                     <th width="200px">Actions</th>
                 </thead>
                 <tbody>
-            {% for collection in collections.all %}
-                <tr>
-                    <td>{{collection.id}}</td>
-                    <td>{{collection.title}}</td>
-                    <td>
-                        {% if not collection.title == 'watched' %}
-                            <form style="margin:0" class="form-inline" method="POST" action="{% url delete-collection collection.id %}">
-                                {% csrf_token %}
-                                <input style="margin:0;padding:0" type="submit" class="btn btn-link btn-small text-error" value="Delete" />
-                            </form>
-                        {% else %}
-                            <i><small>Built-in</small></i>
-                        {% endif %}
-                    </td>
-                </tr>
-            {% endfor%}
+                {% for collection in collections.all %}
+                    <tr>
+                        <td>{{collection.id}}</td>
+                        <td>{{collection.title}}</td>
+                        <td>
+                            {% if not collection.title == 'watched' %}
+                                <form style="margin:0" class="form-inline" method="POST" action="{% url 'delete-collection' collection.id %}">
+                                    {% csrf_token %}
+                                    <input style="margin:0;padding:0" type="submit" class="btn btn-link btn-small text-error" value="Delete" />
+                                </form>
+                            {% else %}
+                                <i><small>Built-in</small></i>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor%}
                 </tbody>
                 <tfoot>
                 <tr>
                     <td></td>
                     <td>
-                        <form style="margin:0" class="form-inline" method="POST" action="{% url create-collection %}">
+                        <form style="margin:0" class="form-inline" method="POST" action="{% url 'create-collection' %}">
                         {% csrf_token %}
                         <input type="hidden" name="user" value="{{request.user.id}}" />
                         <label>Create a new collection: </label>
@@ -145,7 +145,7 @@
 
             <td>
                 {% for movie in movies %}
-                    <a href="{% url merge-movie movie.id %}">Merge</a><br />
+                    <a href="{% url 'merge-movie' movie.id %}">Merge</a><br />
                 {% endfor %}
             </td>
         </tr>
@@ -174,15 +174,15 @@ $(function() {
 
     {% if user.is_staff %}
         {% for movie in movies_no_imdb_id %}
-        g_handle_list['no_imdb_id'].push("{% url fetch-imdb movie.id %}");
+        g_handle_list['no_imdb_id'].push("{% url 'fetch-imdb' movie.id %}");
         {% endfor %}
 
         {% for movie in movies_no_imdb_info %}
-        g_handle_list['no_imdb_info'].push("{% url fetch-imdb movie.id %}");
+        g_handle_list['no_imdb_info'].push("{% url 'fetch-imdb' movie.id %}");
         {% endfor %}
 
         {% for movie in movies_no_tmdb_info %}
-        g_handle_list['no_tmdb_info'].push("{% url fetch-tmdb movie.id %}");
+        g_handle_list['no_tmdb_info'].push("{% url 'fetch-tmdb' movie.id %}");
         {% endfor %}
     {% endif %}
 });

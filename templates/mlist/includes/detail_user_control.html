@@ -1,0 +1,61 @@
+{% load mlist_extras  %}
+{% load humanize %}
+
+<div class="movie-block">
+    <h4>Watched</h4>
+
+    <ul class="mic-list watched-mics">
+        {% for watched_mic in watchedmics %}
+            <li>
+                {% tag_list watched_mic.tags.all %}
+
+                <span title="{{ mic.date }}">
+                {% if watched_mic.id == mic.id %}
+                    <strong>{{ watched_mic.date|naturalday:"DATE_FORMAT" }}</strong>
+                {% else %}
+                    {{ watched_mic.date.date }}
+                {% endif %}
+                </span>
+
+                <a class="close action-remove text-error" href="{% url "delete-movie" watched_mic.id %}">
+                    &times;
+                </a>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h5>
+        <a class="btn btn-mini" href="{% url "add-movie" %}?title={{mic.movie.get_title}}&imdb_id={{mic.movie.imdb_id}}">
+            <i class="icon-plus"></i>
+            Add
+        </a>
+    </h5>
+
+    <h4>Collections</h4>
+    <ul class="mic-list collection-mics">
+    {% for collection_mic in collections %}
+        <li>
+            <span class="label">{{collection_mic.collection.title}}</span>
+
+            {% if collection_mic.id == mic.id %}
+                <strong><small>{{collection_mic.date.date}}</small></strong>
+            {% else %}
+                <small>{{collection_mic.date.date}}</small>
+            {% endif %}
+
+            {% tag_list collection_mic.tags.all %}
+
+            <a class="close action-remove text-error" href="{% url "delete-movie" collection_mic.id %}">
+                &times;
+            </a>
+        </li>
+    {% endfor %}
+    </ul>
+
+    <h5>
+        <a class="btn btn-mini" href="{% url "add-movie" %}?title={{mic.movie.title}}&imdb_id={{mic.movie.imdb_id}}&collection=0">
+            <i class="icon-plus"></i>
+            Add to collection
+        </a>
+    </h5>
+</div>

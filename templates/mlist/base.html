@@ -32,7 +32,7 @@ style='background-image: url("{% static "img/gradient_squares.png" %}")'
 {% endif %}>
 <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
 
-    <div class="navbar navbar-fixed-top">
+    <div class="navbar navbar-default navbar-fixed-top">
       <div class="navbar-inner">
         <div class="container">
           <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
@@ -94,7 +94,10 @@ style='background-image: url("{% static "img/gradient_squares.png" %}")'
     <div class="container mlist-container
     {% if mic and tmdb and tmdb.backdrop_url %}
     img-polaroid
-    {% endif %}">
+    {% endif %}
+    {% block custom-container %}
+    {% endblock %}
+    ">
 
       {% if messages %}
       {% for message in messages %}

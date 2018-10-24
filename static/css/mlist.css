@@ -45,6 +45,20 @@ body {
     font-weight: 200;
 }
 
+.movie-title .title {
+    background: white;
+    padding: 3px;
+    opacity: 0.8;
+    margin-top: 60px;
+}
+
+.movie-title .tagline {
+    background: black;
+    padding: 3px;   
+    opacity: 0.8;
+}
+
+
 .mlist-container {
     border: 1px solid #d4d4d4;
     background-color: white;
@@ -55,9 +69,38 @@ body {
     padding-top: 60px;
 }
 
+.mlist-container.mlist-movie-detail {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+.movie-block {
+    box-shadow: 0 6px 12px rgba(0,0,0,.175);
+    padding: 10px;
+    background-color: rgba(255,255,255,1.0);
+    margin-bottom: 25px;
+}
+
+.movie-block h4 {
+    margin-left: -10px;
+    margin-right: -10px;
+    padding: 10px;
+    color: #666;
+    text-align: left;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 1.0em;
+}
+
+.movie-block h4:first-child {
+    margin-top: -10px;
+}
+
 .movie-cover img {
     box-shadow: 0px 1px 10px rgba(0,0,0,0.2);
-    border-radius: 3px;
+    padding: 10px;
+    background-color: white;
 }
 
 .form-actions {
