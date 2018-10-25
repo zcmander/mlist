@@ -424,7 +424,7 @@ def export_view(request):
                 return unicode(tag)[len("media:"):]
         return ''
 
-    response = HttpResponse(mimetype='text/csv')
+    response = HttpResponse(content_type='text/csv')
     response['Content-Disposition'] = 'attachment; filename="exported-movies-' + datetime.date.today().strftime("%d%m%y") + '.csv"'
 
     writer = UnicodeWriter(response)

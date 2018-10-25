@@ -3,6 +3,6 @@
 {% block container %}
 {% crispy form %}
 
-<a href="{% url export-movies %}">Export 'watched'-collection (CSV)</a><br/>
-<a href="{% url adv-export-movies %}">Export 'watched'-collection (JSON)</a><br/>
+<a href="{% url 'export-movies' %}">Export 'watched'-collection (CSV)</a><br/>
+<a href="{% url 'adv-export-movies' %}">Export 'watched'-collection (JSON)</a><br/>
 {% endblock %}
