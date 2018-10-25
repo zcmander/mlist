@@ -1,5 +1,4 @@
-import urllib
-import urllib2
+from six.moves import urllib
 import json
 import datetime
 

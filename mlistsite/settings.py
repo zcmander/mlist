@@ -97,7 +97,7 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'jji@wnv-0uo=hspv03y9zcfvv%wb8cv3wz8)jra1f8y$**5-r&amp;'
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     #'django.middleware.csrf.CsrfViewMiddleware',
@@ -132,7 +132,7 @@ INSTALLED_APPS = (
     'debug_toolbar'
 )
 
-USE_THOUSAND_SEPARATOR = True
+USE_THOUSAND_SEPARATOR = False
 
 INTERNAL_IPS = ('127.0.0.1',)
 CRISPY_TEMPLATE_PACK = 'bootstrap'

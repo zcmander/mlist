@@ -144,6 +144,7 @@ bin
 var
 sdist
 develop-eggs
+env
 .installed.cfg
 
 # Installer logs
@@ -161,4 +162,6 @@ pip-log.txt
 
 # Mac crap
 .DS_Store
+
+# Debug
 MList.db

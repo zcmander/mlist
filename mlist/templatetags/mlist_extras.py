@@ -37,12 +37,11 @@ def mkrange(parser, token):
 
     tokens = token.split_contents()
     fnctl = tokens.pop(0)
-    print tokens
 
     def error():
-        raise TemplateSyntaxError, "%s accepts the syntax: {%% %s [start,] " +\
+        raise TemplateSyntaxError("%s accepts the syntax: {%% %s [start,] " +\
                 "stop[, step] as context_name %%}, where 'start', 'stop' " +\
-                "and 'step' must all be integers." %(fnctl, fnctl)
+                "and 'step' must all be integers." %(fnctl, fnctl))
 
     range_args = []
     while True:
@@ -124,7 +123,7 @@ def br_list(text):
 @register.simple_tag
 def movie_stars(value):
     converted_value = (float(value))
-    string_converted_value = u'<small class="pull-right">' + unicode(converted_value) + "</small>"
+    string_converted_value = u'<small class="pull-right">' + str(converted_value) + "</small>"
     star = u'<i class="icon-star"></i>'
     #star_empty = u'<i class="icon-star-empty"></i>'
     star_empty = ''
@@ -133,7 +132,7 @@ def movie_stars(value):
 
 # app/templatetags/basic.py
 from django import template
-from django.utils.encoding import smart_unicode
+from django.utils.encoding import smart_text
 from django.utils.safestring import mark_safe
 
 

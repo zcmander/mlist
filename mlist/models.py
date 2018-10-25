@@ -6,9 +6,11 @@ from taggit.managers import TaggableManager
 
 from mlist.omdbapi import BackendOMDB
 
-import tmdb
-tmdb.configure("492ffa13c4f4eedb4599ee3a803487de")
-core = tmdb.Core()
+from .tmdb import configure, Core, Movie, config
+
+configure("492ffa13c4f4eedb4599ee3a803487de")
+
+core = Core()
 core.update_configuration()
 
 
@@ -52,7 +54,7 @@ class IMDBMovie(models.Model):
             self.poster_url = r.get('poster_url')
         return self
 
-    def __unicode__(self):
+    def __str__(self):
         return u"{0} [{1}]".format(self.title, self.imdb_id)
 
 
@@ -86,7 +88,7 @@ class TMDBMovie(models.Model):
     def create(cls, title, imdb_id=None):
         self = cls()
 
-        tmdb_movies = tmdb.Movies(title=title, limit=True)
+        tmdb_movies = Movies(title=title, limit=True)
         tmdb_movie = None
 
         if tmdb_movies.get_total_results() > 0:
@@ -126,21 +128,21 @@ class TMDBMovie(models.Model):
 
     @property
     def thumbnail_poster_url(self):
-        return tmdb.config.get('api', {}).get('base.url') + core.poster_sizes('m') + self.poster_path
+        return config.get('api', {}).get('base.url') + core.poster_sizes('m') + self.poster_path
 
     @property
     def large_poster_url(self):
-        return tmdb.config.get('api', {}).get('base.url') + core.poster_sizes('l') + self.poster_path
+        return config.get('api', {}).get('base.url') + core.poster_sizes('l') + self.poster_path
 
     @property
     def backdrop_url(self):
-        return tmdb.config.get('api', {}).get('base.url') + core.backdrop_sizes('s') + self.backdrop_path
+        return config.get('api', {}).get('base.url') + core.backdrop_sizes('s') + self.backdrop_path
 
     @property
     def backdrop_orginal_url(self):
-        return tmdb.config.get('api', {}).get('base.url') + core.backdrop_sizes('o') + self.backdrop_path
+        return config.get('api', {}).get('base.url') + core.backdrop_sizes('o') + self.backdrop_path
 
-    def __unicode__(self):
+    def __str__(self):
         return u"{0} [{1}]".format(self.title, self.imdb_id)
 
 
@@ -153,7 +155,7 @@ class Movie(models.Model):
             ("update_movie", "Can update movie"),
         )
 
-    def __unicode__(self):
+    def __str__(self):
         return u'{0} [{1}]'.format(self.title, self.imdb_id)
 
     @property
@@ -195,22 +197,22 @@ class Movie(models.Model):
 
 
 class Collection(models.Model):
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
     movies = models.ManyToManyField(Movie, through='MovieInCollection', blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return u"{0} ({1})".format(self.title, self.movies.count())
 
 
 class MovieInCollection(models.Model):
-    movie = models.ForeignKey(Movie)
-    collection = models.ForeignKey(Collection)
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    collection = models.ForeignKey(Collection, on_delete=models.CASCADE)
 
     date = models.DateTimeField()
     tags = TaggableManager(blank=True)
 
-    def __unicode__(self):
+    def __str__(self):
         return u'[{0}, {1}] {2}'.format(self.collection.user, self.date, self.movie.title)
 
 admin.site.register(TMDBMovie)

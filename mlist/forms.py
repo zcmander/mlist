@@ -1,7 +1,7 @@
 import datetime
 
 from django import forms
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit, Field, HTML

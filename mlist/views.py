@@ -1,10 +1,11 @@
 import csv
 import json
 import codecs
-import StringIO
 import datetime
 
-from django.core.urlresolvers import reverse, reverse_lazy
+from six import StringIO
+
+from django.urls import reverse, reverse_lazy
 from django.views.generic import DetailView, ListView, FormView, DeleteView, UpdateView, CreateView
 from django.contrib.auth import logout, login, authenticate
 from django.contrib import messages
@@ -379,7 +380,7 @@ def logout_view(request):
 
 
 def login_view(request):
-    if request.user and request.user.is_authenticated():
+    if request.user and request.user.is_authenticated:
         return redirect(reverse('list-movies'))
     return render_to_response("mlist/login.html")
 
@@ -535,6 +536,6 @@ def statistics_view(request):
 def ajax_taglist_view(request):
     tags = []
     for tag in MovieInCollection.tags.all():
-        tags.append({'tag': unicode(tag)})
+        tags.append({'tag': str(tag)})
     content = {'tags': tags}
     return HttpResponse(json.dumps(content), content_type="application/json")
