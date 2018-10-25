@@ -245,7 +245,6 @@ class MovieList(ListView):
     paginate_by = 6 * 6
 
     def get_queryset(self):
-        print(self.kwargs)
         collection = Collection.objects.filter(user=self.request.user, title=self.kwargs['collection'])[:1].get()
         return collection.movieincollection_set.order_by('-date').select_related().all()
 
