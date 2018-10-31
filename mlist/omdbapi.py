@@ -1,6 +1,8 @@
-from six.moves import urllib
 import json
 import datetime
+
+from urllib.request import urlopen
+from urllib.parse import quote
 
 class BackendOMDB:
     """
@@ -18,9 +20,9 @@ class BackendOMDB:
         url = self.__base_url
 
         if imdb_id != None:
-            url += "?i=" + urllib.quote(imdb_id) + "&apikey=" + self.APIKEY
+            url += "?i=" + quote(imdb_id) + "&apikey=" + self.APIKEY
         elif title != None:
-            url += "?t=" + urllib.quote(title) + "&apikey=" + self.APIKEY
+            url += "?t=" + quote(title) + "&apikey=" + self.APIKEY
         else:
             raise Exception('imdb_id OR title MUST be provided')
 
@@ -50,7 +52,7 @@ class BackendOMDB:
             movie_info['released'] = datetime.datetime.strptime(data.get('Released', None), "%d %b %Y")
         except ValueError:
             movie_info['released'] = datetime.datetime.strptime(data.get('Released', None), "%b %Y")
-        except:
+        except Exception:
             movie_info['released'] = None
 
         movie_info['runtime'] = data.get('Runtime', None)
@@ -61,12 +63,12 @@ class BackendOMDB:
 
         try:
             movie_info['votes'] = (int)(data['imdbVotes'].replace(",", ''))
-        except:
+        except Exception:
             movie_info['votes'] = None
 
         try:
             movie_info['rating'] = (float)(data.get('imdbRating', None))
-        except:
+        except Exception:
             movie_info['rating'] = None
 
         movie_info['genre'] = data.get('Genre', None)
@@ -79,7 +81,7 @@ class BackendOMDB:
         """
         Creates HTTP connection to datasource and passes it to JSON-parser
         """
-        conn = urllib2.urlopen(url)
+        conn = urlopen(url)
         rawdata = conn.read()
         data = json.loads(rawdata)
 

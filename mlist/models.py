@@ -6,7 +6,7 @@ from taggit.managers import TaggableManager
 
 from mlist.omdbapi import BackendOMDB
 
-from .tmdb import configure, Core, Movie, config
+from .tmdb import configure, Core, Movies, config
 
 configure("492ffa13c4f4eedb4599ee3a803487de")
 

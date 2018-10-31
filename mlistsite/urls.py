@@ -1,59 +1,61 @@
 # -*- coding:utf-8 -*-
 from django.conf.urls import include, url
-from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.decorators import login_required
 from django.conf import settings
 from django.contrib import admin
 from django.views.static import serve
 from django.urls import path
 
-from mlist.views import (
-    MovieCreate,
-    MovieImport,
-    MovieList,
-    MovieDetail,
-    MovieUpdate,
-    MovieDelete,
-    MovieSearch
-)
-from mlist.views import (
-    CollectionDelete,
-    CollectionCreate
-)
-from mlist.forms import MovieSearchForm
 from haystack.views import search_view_factory
 
-from mlist import views
+from mlist.views.movie_create import MovieCreate
+from mlist.views.movie_import import MovieImport
+from mlist.views.movie_list import MovieList
+from mlist.views.movie_detail import MovieDetail
+from mlist.views.movie_update import MovieUpdate
+from mlist.views.movie_delete import MovieDelete
+from mlist.views.movie_search import MovieSearch
+from mlist.views.collection_create import CollectionCreate
+from mlist.views.collection_delete import CollectionDelete
+from mlist.views.auth import login_view, authenticate_view, logout_view
+from mlist.views.movie_export import export_view, adv_export_view
+from mlist.views.settings import settings_view, merge_movie_view
+from mlist.views.statistics import statistics_view
+from mlist.views.movie_utils import fetch_imdb_view, fetch_tmdb_view
+from mlist.views.movie_create import ajax_taglist_view
+
+from mlist.forms import MovieSearchForm
 
 admin.autodiscover()
 
 urlpatterns = [
-    url(r'^list$', login_required(MovieList.as_view()), {'collection': 'watched'}, name="list-movies"),
-    url(r'^list/(?P<collection>.*)/$', login_required(MovieList.as_view()), name="list-movies"),
+    url(r'^list$', MovieList.as_view(), {'collection': 'watched'}, name="list-movies"),
+    url(r'^list/(?P<collection>.*)/$', MovieList.as_view(), name="list-movies"),
 
-    url(r'^add$',                 login_required(MovieCreate.as_view()), name="add-movie"),
-    url(r'^update/(?P<pk>\d+)/$', permission_required('mlist.can_update_movie')(MovieUpdate.as_view()), name="update-movie"),
-    url(r'^delete/(?P<pk>\d+)/$', login_required(MovieDelete.as_view()), name="delete-movie"),
-    url(r'^import$',              login_required(MovieImport.as_view()), name='import-movies'),
-    url(r'^movies/(?P<pk>\d+)/$', login_required(MovieDetail.as_view()), name="detail-movie"),
+    url(r'^add$', MovieCreate.as_view(), name="add-movie"),
+    url(r'^update/(?P<pk>\d+)/$', MovieUpdate.as_view(), name="update-movie"),
+    url(r'^delete/(?P<pk>\d+)/$', MovieDelete.as_view(), name="delete-movie"),
+    url(r'^import$', MovieImport.as_view(), name='import-movies'),
+    url(r'^movies/(?P<pk>\d+)/$', MovieDetail.as_view(), name="detail-movie"),
 
-    url(r'^delete-collection/(?P<pk>\d+)/$', login_required(CollectionDelete.as_view()), name="delete-collection"),
-    url(r'^create-collection$',              login_required(CollectionCreate.as_view()), name="create-collection"),
+    url(r'^delete-collection/(?P<pk>\d+)/$', CollectionDelete.as_view(), name="delete-collection"),
+    url(r'^create-collection$', CollectionCreate.as_view(), name="create-collection"),
 ]
 
 urlpatterns += [
-    url(r'^$', views.login_view, name="login"),
-    url(r'^auth', views.authenticate_view, name="authenticate"),
-    url(r'^logout$', views.logout_view, name="logout"),
-    url(r'^export$', views.export_view, name="export-movies"),
-    url(r'^export2$', views.adv_export_view, name="adv-export-movies"),
-    url(r'^settings$', views.settings_view, name="settings"),
-    url(r'^statistics$', views.statistics_view, name="statistics"),
+    url(r'^$', login_view, name="login"),
+    url(r'^auth', authenticate_view, name="authenticate"),
+    url(r'^logout$', logout_view, name="logout"),
+    url(r'^export$', export_view, name="export-movies"),
+    url(r'^export2$', adv_export_view, name="adv-export-movies"),
+    url(r'^settings$', settings_view, name="settings"),
+    url(r'^statistics$', statistics_view, name="statistics"),
 
-    url(r'^merge-movie/(?P<pk>\d+)/$', views.merge_movie_view, name="merge-movie"),
+    url(r'^merge-movie/(?P<pk>\d+)/$', merge_movie_view, name="merge-movie"),
 
-    url(r'^fetch-imdb/(?P<pk>\d+)/$', views.fetch_imdb_view, name="fetch-imdb"),
-    url(r'^fetch-tmdb/(?P<pk>\d+)/$', views.fetch_tmdb_view, name="fetch-tmdb"),
-    url(r'^ajax/tag-list$', views.ajax_taglist_view, name="ajax_taglist"),
+    url(r'^fetch-imdb/(?P<pk>\d+)/$', fetch_imdb_view, name="fetch-imdb"),
+    url(r'^fetch-tmdb/(?P<pk>\d+)/$', fetch_tmdb_view, name="fetch-tmdb"),
+    url(r'^ajax/tag-list$', ajax_taglist_view, name="ajax_taglist"),
 ]
 
 # Haystack
@@ -68,7 +70,7 @@ urlpatterns += [
 urlpatterns += [
     url(r'^static/(?P<path>.*)$', serve,
         {'document_root': settings.STATIC_ROOT}),
-        
+    
     path('admin/', admin.site.urls),
 ]
 
