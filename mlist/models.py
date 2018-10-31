@@ -37,21 +37,21 @@ class IMDBMovie(models.Model):
     def create(cls, title=None, imdb_id=None):
         self = cls()
         if title or imdb_id:
-            r = BackendOMDB().get_data(title, imdb_id)
-            self.imdb_id = r.get('imdb_id')
-            self.title = r.get('title')
-            self.year = r.get('year')[:4]
-            self.rated = r.get('rated')
-            self.released = r.get('released')
-            self.runtime = r.get('runtime')
-            self.director = r.get('director')
-            self.writer = r.get('writer')
-            self.actors = r.get('actors')
-            self.plot = r.get('plot')
-            self.votes = r.get('votes')
-            self.rating = r.get('rating')
-            self.genre = r.get('genre')
-            self.poster_url = r.get('poster_url')
+            result = BackendOMDB().get_data(title, imdb_id)
+            self.imdb_id = result.get('imdb_id')
+            self.title = result.get('title')
+            self.year = result.get('year')[:4]
+            self.rated = result.get('rated')
+            self.released = result.get('released')
+            self.runtime = result.get('runtime')
+            self.director = result.get('director')
+            self.writer = result.get('writer')
+            self.actors = result.get('actors')
+            self.plot = result.get('plot')
+            self.votes = result.get('votes')
+            self.rating = result.get('rating')
+            self.genre = result.get('genre')
+            self.poster_url = result.get('poster_url')
         return self
 
     def __str__(self):
@@ -103,13 +103,29 @@ class TMDBMovie(models.Model):
             if not tmdb_movie:
                 raise Exception("Movie not found! (TMDB)")
 
+            spoken_language_names = [
+                x['name'] for x in tmdb_movie.get_spoken_languages()
+            ]
+
+            production_company_names = [
+                x['name'] for x in tmdb_movie.get_production_companies()
+            ]
+
+            productions_country_names = [
+                x['name'] for x in tmdb_movie.get_productions_countries()
+            ]
+
+            genre_names = [
+                x['name'] for x in tmdb_movie.get_genres()
+            ]
+
             self.imdb_id = tmdb_movie.get_imdb_id()
             self.tmdb_id = tmdb_movie.get_id()
             self.original_title = tmdb_movie.get_original_title()
             self.title = tmdb_movie.get_title()
             self.popularity = tmdb_movie.get_popularity()
             self.adult = tmdb_movie.is_adult()
-            self.spoken_languages = ','.join([x['name'] for x in tmdb_movie.get_spoken_languages()])
+            self.spoken_languages = ','.join(spoken_language_names)
             self.homepage = tmdb_movie.get_homepage()
             self.overview = tmdb_movie.get_overview()
             self.vote_average = tmdb_movie.get_vote_average()
@@ -117,9 +133,9 @@ class TMDBMovie(models.Model):
             self.runtime = tmdb_movie.get_runtime()
             self.budget = tmdb_movie.get_budget()
             self.revenue = tmdb_movie.get_revenue()
-            self.genres = ','.join([x['name'] for x in tmdb_movie.get_genres()])
-            self.production_companies = ','.join([x['name'] for x in tmdb_movie.get_production_companies()])
-            self.productions_countries = ','.join([x['name'] for x in tmdb_movie.get_productions_countries()])
+            self.genres = ','.join(genre_names)
+            self.production_companies = ','.join(production_company_names)
+            self.productions_countries = ','.join(productions_country_names)
             self.poster_path = tmdb_movie.get_poster_path()
             self.backdrop_path = tmdb_movie.get_backdrop_path()
             self.tagline = tmdb_movie.get_tagline()
@@ -128,19 +144,27 @@ class TMDBMovie(models.Model):
 
     @property
     def thumbnail_poster_url(self):
-        return config.get('api', {}).get('base.url') + core.poster_sizes('m') + self.poster_path
+        return config.get('api', {}).get('base.url') + \
+               core.poster_sizes('m') + \
+               self.poster_path
 
     @property
     def large_poster_url(self):
-        return config.get('api', {}).get('base.url') + core.poster_sizes('l') + self.poster_path
+        return config.get('api', {}).get('base.url') + \
+               core.poster_sizes('l') + \
+               self.poster_path
 
     @property
     def backdrop_url(self):
-        return config.get('api', {}).get('base.url') + core.backdrop_sizes('s') + self.backdrop_path
+        return config.get('api', {}).get('base.url') + \
+               core.backdrop_sizes('s') + \
+               self.backdrop_path
 
     @property
     def backdrop_orginal_url(self):
-        return config.get('api', {}).get('base.url') + core.backdrop_sizes('o') + self.backdrop_path
+        return config.get('api', {}).get('base.url') + \
+               core.backdrop_sizes('o') + \
+               self.backdrop_path
 
     def __str__(self):
         return u"{0} [{1}]".format(self.title, self.imdb_id)
@@ -164,7 +188,6 @@ class Movie(models.Model):
             return IMDBMovie.objects.filter(imdb_id=self.imdb_id).get()
         except IMDBMovie.DoesNotFound:
             return False
-
 
     @property
     def has_tmdb(self):
@@ -199,7 +222,10 @@ class Movie(models.Model):
 class Collection(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     title = models.CharField(max_length=200)
-    movies = models.ManyToManyField(Movie, through='MovieInCollection', blank=True)
+    movies = models.ManyToManyField(
+        Movie,
+        through='MovieInCollection',
+        blank=True)
 
     def __str__(self):
         return u"{0} ({1})".format(self.title, self.movies.count())
@@ -213,7 +239,11 @@ class MovieInCollection(models.Model):
     tags = TaggableManager(blank=True)
 
     def __str__(self):
-        return u'[{0}, {1}] {2}'.format(self.collection.user, self.date, self.movie.title)
+        return u'[{0}, {1}] {2}'.format(
+            self.collection.user,
+            self.date,
+            self.movie.title)
+
 
 admin.site.register(TMDBMovie)
 admin.site.register(IMDBMovie)

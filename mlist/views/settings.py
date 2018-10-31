@@ -22,10 +22,16 @@ def settings_view(request):
         sqs = sqs.order_by("-mic_count")
         duplicate_movies.append(sqs.all())
 
+    imdb_ids = [x.imdb_id for x in IMDBMovie.objects.all()]
+    no_imdb_info = Movie.objects.exclude(imdb_id__in=imdb_ids)
+
+    tmdb_ids = [x.imdb_id for x in TMDBMovie.objects.all()]
+    no_tmdb_info = Movie.objects.exclude(imdb_id__in=tmdb_ids)
+
     render_dict = {
         'movies_no_imdb_id': Movie.objects.filter(imdb_id=None),
-        'movies_no_imdb_info': Movie.objects.exclude(imdb_id__in=[x.imdb_id for x in IMDBMovie.objects.all()]),
-        'movies_no_tmdb_info': Movie.objects.exclude(imdb_id__in=[x.imdb_id for x in TMDBMovie.objects.all()]),
+        'movies_no_imdb_info': no_imdb_info,
+        'movies_no_tmdb_info': no_tmdb_info,
         'movies_duplicate_imdb': duplicate_movies,
         'collections': request.user.collection_set
     }
@@ -35,7 +41,10 @@ def settings_view(request):
 @login_required
 def merge_movie_view(request, pk):
     to_movie = Movie.objects.get(pk=pk)
-    other_movies = Movie.objects.filter(imdb_id=to_movie.imdb_id).exclude(pk=pk).all()
+    other_movies = Movie.objects \
+        .filter(imdb_id=to_movie.imdb_id) \
+        .exclude(pk=pk) \
+        .all()
 
     for movie in other_movies:
         for mic in movie.movieincollection_set.all():

@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 from django.contrib import admin
 from .models import MovieInCollection, Collection, Movie
 
@@ -18,18 +16,19 @@ class MovieInCollectionAdmin(admin.ModelAdmin):
     ordering = ("-date",)
     search_fields = ("movie__title",)
     fieldsets = (
-            (None, {
-                'fields': ('movie', 'collection')
-                }),
-            ('Advanced', {
-                'classes': ("collapse",),
-                'fields': ('date', 'tags')
-                })
-        )
+        (None, {
+            'fields': ('movie', 'collection')
+            }),
+        ('Advanced', {
+            'classes': ("collapse",),
+            'fields': ('date', 'tags')
+            })
+    )
 
 
 class MovieAdmin(admin.ModelAdmin):
     search_fields = ("title", "imdb_id")
+
 
 admin.site.register(MovieInCollection, MovieInCollectionAdmin)
 admin.site.register(Collection, CollectionAdmin)

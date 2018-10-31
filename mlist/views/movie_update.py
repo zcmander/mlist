@@ -1,5 +1,5 @@
 from django.urls import reverse
-from django.views.generic import  UpdateView
+from django.views.generic import UpdateView
 from django.contrib.auth.decorators import permission_required
 from django.utils.decorators import method_decorator
 
@@ -9,7 +9,9 @@ from mlist.models import MovieInCollection
 from .mixins import MessageMixin
 
 
-@method_decorator(permission_required('mlist.can_update_movie'), name='dispatch')
+@method_decorator(
+    permission_required('mlist.can_update_movie'),
+    name='dispatch')
 class MovieUpdate(UpdateView, MessageMixin):
     model = MovieInCollection
     template_name = "mlist/movie_update.html"

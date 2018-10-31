@@ -1,4 +1,3 @@
-import datetime
 from haystack import indexes
 from mlist.models import MovieInCollection
 
@@ -22,6 +21,8 @@ class MovieInCollectionIndex(indexes.SearchIndex, indexes.Indexable):
         return obj.collection.user.id
 
     def prepare(self, object):
-        self.prepared_data = super(MovieInCollectionIndex, self).prepare(object)
+        self.prepared_data = super(MovieInCollectionIndex, self) \
+            .prepare(object)
+
         self.prepared_data['tags'] = [tag.name for tag in object.tags.all()]
         return self.prepared_data

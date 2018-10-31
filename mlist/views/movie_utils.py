@@ -28,7 +28,8 @@ def fetch_imdb_view(request, pk):
 def fetch_tmdb_view(request, pk):
     movie = Movie.objects.get(pk=int(pk))
     if not movie.imdb_id:
-        messages.error(request, 'TMDB information requires IMDB id before fetch.')
+        messages.error(
+            request, 'TMDB information requires IMDB id before fetch.')
         return redirect(reverse("list-movies"))
 
     tmdb_movie = TMDBMovie.create(title=movie.title, imdb_id=movie.imdb_id)

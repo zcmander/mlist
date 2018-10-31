@@ -6,11 +6,16 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import redirect
-from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
 from mlist.forms import MovieForm
-from mlist.models import Movie, MovieInCollection, Collection, IMDBMovie, TMDBMovie
+from mlist.models import (
+    Movie,
+    MovieInCollection,
+    Collection,
+    IMDBMovie,
+    TMDBMovie,
+)
 
 
 @method_decorator(login_required, name='dispatch')
@@ -21,8 +26,11 @@ class MovieCreate(FormView):
 
     def get_initial(self):
         collection = None
+
+        collection_title = self.request.GET.get("collection", "watched")
+
         collection_query = Collection.objects.filter(user=self.request.user,
-                                                     title=self.request.GET.get("collection", "watched"))
+                                                     title=collection_title)
         if collection_query:
             collection = collection_query.get()
 
@@ -43,7 +51,6 @@ class MovieCreate(FormView):
         title = form.cleaned_data['title']
         tags = form.cleaned_data['tags']
         date = form.cleaned_data['date']
-        #date = datetime.datetime.combine(date, datetime.datetime.now().time())
         imdb_id = form.cleaned_data['imdb_id']
 
         collection = form.cleaned_data['collection']

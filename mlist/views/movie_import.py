@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 import unicodecsv as csv
 from six import StringIO
@@ -28,8 +28,8 @@ class MovieImport(FormView):
         for row in reader:
             title = row[2]
             imdb_id = row[3]
-            date = datetime.datetime.strptime(row[1], "%d.%m.%Y")
-            date = datetime.datetime.combine(date, datetime.datetime.now().time())
+            date = datetime.strptime(row[1], "%d.%m.%Y")
+            date = datetime.combine(date, datetime.now().time())
             media = row[0]
 
             has_imdb = imdb_id is True
@@ -52,7 +52,11 @@ class MovieImport(FormView):
                     movie.imdb_id = row[3]
                 movie.save()
 
-            collection = Collection.objects.filter(user=self.request.user, title="watched")[:1].get()
+            collection = Collection.objects\
+                .filter(
+                    user=self.request.user,
+                    title="watched"
+                )[:1].get()
 
             mic = MovieInCollection()
             mic.movie = movie

@@ -1,8 +1,9 @@
 import json
-import datetime
+from datetime import datetime
 
 from urllib.request import urlopen
 from urllib.parse import quote
+
 
 class BackendOMDB:
     """
@@ -19,9 +20,9 @@ class BackendOMDB:
         """
         url = self.__base_url
 
-        if imdb_id != None:
+        if imdb_id is not None:
             url += "?i=" + quote(imdb_id) + "&apikey=" + self.APIKEY
-        elif title != None:
+        elif title is not None:
             url += "?t=" + quote(title) + "&apikey=" + self.APIKEY
         else:
             raise Exception('imdb_id OR title MUST be provided')
@@ -29,7 +30,6 @@ class BackendOMDB:
         url += "&plot=full"
 
         return url
-
 
     def _parse_json(self, data):
         """
@@ -49,9 +49,13 @@ class BackendOMDB:
         movie_info['rated'] = data.get('Rated', None)
 
         try:
-            movie_info['released'] = datetime.datetime.strptime(data.get('Released', None), "%d %b %Y")
+            movie_info['released'] = datetime.strptime(
+                data.get('Released', None),
+                "%d %b %Y")
         except ValueError:
-            movie_info['released'] = datetime.datetime.strptime(data.get('Released', None), "%b %Y")
+            movie_info['released'] = datetime.strptime(
+                data.get('Released', None),
+                "%b %Y")
         except Exception:
             movie_info['released'] = None
 
@@ -86,7 +90,6 @@ class BackendOMDB:
         data = json.loads(rawdata)
 
         if data['Response'] != 'True':
-            # TODO: Add logging for unexcepted responses
             if 'Error' in data:
                 raise Exception(data['Error'])
             raise Exception(data['Response'])

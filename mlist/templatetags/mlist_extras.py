@@ -1,9 +1,10 @@
-# based on: http://www.djangosnippets.org/snippets/779/
-from django.template import Library, Node, TemplateSyntaxError
 from django.utils.safestring import mark_safe
+from django.template import Library, Node, TemplateSyntaxError
+
 from mlist.models import Collection
 
 register = Library()
+
 
 class RangeNode(Node):
     def __init__(self, range_args, context_name):
@@ -39,9 +40,10 @@ def mkrange(parser, token):
     fnctl = tokens.pop(0)
 
     def error():
-        raise TemplateSyntaxError("%s accepts the syntax: {%% %s [start,] " +\
-                "stop[, step] as context_name %%}, where 'start', 'stop' " +\
-                "and 'step' must all be integers." %(fnctl, fnctl))
+        raise TemplateSyntaxError(
+            "%s accepts the syntax: {%% %s [start,] " + \
+            "stop[, step] as context_name %%}, where 'start', 'stop' " + \
+            "and 'step' must all be integers." % (fnctl))
 
     range_args = []
     while True:
@@ -63,6 +65,7 @@ def mkrange(parser, token):
     context_name = tokens.pop()
 
     return RangeNode(range_args, context_name)
+
 
 @register.inclusion_tag('mlist/tags/collection_list.html')
 def collection_list(user):
@@ -113,12 +116,14 @@ def genre_list(imdb_genres, tmdb_genres):
             'imdb_genres': sorted(set_imdb_genres),
             'tmdb_genres': sorted(set_tmdb_genres)}
 
+
 @register.inclusion_tag("mlist/tags/br_list.html")
 def br_list(text):
     if text:
         return {'values': [x.strip() for x in text.split(',')]}
     else:
         return {'values': []}
+
 
 @register.simple_tag
 def movie_stars(value):
@@ -130,13 +135,6 @@ def movie_stars(value):
     return mark_safe(star * int(converted_value) + star_empty * (10 - int(converted_value)) + u" " + string_converted_value)
 
 
-# app/templatetags/basic.py
-from django import template
-from django.utils.encoding import smart_text
-from django.utils.safestring import mark_safe
-
-
-# lib/utils.py
 def get_query_string(p, new_params=None, remove=None):
     """
     Add and remove query parameters. From `django.contrib.admin`.
@@ -153,6 +151,7 @@ def get_query_string(p, new_params=None, remove=None):
         elif v is not None:
             p[k] = v
     return mark_safe('?' + '&amp;'.join([u'%s=%s' % (k, v) for k, v in p.items()]).replace(' ', '%20'))
+
 
 def string_to_dict(string):
     """

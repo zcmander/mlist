@@ -19,11 +19,14 @@ def export_view(request):
 
     response = HttpResponse(content_type='text/csv')
     todaystr = datetime.date.today().strftime("%d%m%y")
-    response['Content-Disposition'] = 'attachment; filename="exported-movies-' + todaystr + '.csv"'
+    response['Content-Disposition'] = \
+        'attachment; filename="exported-movies-' + todaystr + '.csv"'
 
     writer = csv.writer(response)
 
-    collection = Collection.objects.filter(user=request.user, title="watched").get()
+    collection = Collection.objects \
+        .filter(user=request.user, title="watched").get()
+
     for mic in collection.movieincollection_set.order_by("date").all():
         media = get_media_tag(mic.tags.all())
         title = mic.movie.get_title()
@@ -65,7 +68,6 @@ class MovieInCollectionExportJsonEncode(json.JSONEncoder):
 
                 r['movie']['imdb'] = imdb_info
 
-
             return r
         if isinstance(obj, datetime.datetime) or \
            isinstance(obj, datetime.date):
@@ -76,8 +78,14 @@ class MovieInCollectionExportJsonEncode(json.JSONEncoder):
 
 @login_required()
 def adv_export_view(request):
-    collection = Collection.objects.filter(user=request.user, title="watched").get()
+    collection = Collection.objects \
+        .filter(user=request.user, title="watched").get()
+
     movies = list(collection.movieincollection_set.order_by("date").all())
-    content = json.dumps(movies, cls=MovieInCollectionExportJsonEncode, indent=4)
+
+    content = json.dumps(
+        movies,
+        cls=MovieInCollectionExportJsonEncode,
+        indent=4)
 
     return HttpResponse(content, content_type="application/json")

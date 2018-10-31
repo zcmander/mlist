@@ -5,7 +5,13 @@ from django.urls import reverse
 
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Fieldset, Submit, Field, HTML
-from crispy_forms.bootstrap import FormActions, FieldWithButtons, PrependedText, TabHolder, Tab
+from crispy_forms.bootstrap import (
+    FormActions,
+    FieldWithButtons,
+    PrependedText,
+    TabHolder,
+    Tab
+)
 from haystack.forms import SearchForm
 
 from .models import MovieInCollection, Collection
@@ -28,11 +34,11 @@ class CollectionForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_class = "form-horizontal"
         self.helper.layout = Layout(
-                'title',
-                FormActions(
-                    Submit("submit", "Create")
-                )
+            'title',
+            FormActions(
+                Submit("submit", "Create")
             )
+        )
 
 
 class MovieForm(forms.ModelForm):
@@ -43,12 +49,15 @@ class MovieForm(forms.ModelForm):
     title = forms.CharField()
     jstags = forms.CharField(label="Tags", required=False)
     imdb_id = forms.CharField(required=False)
-    date = forms.DateTimeField(initial=datetime.datetime.now, widget=BetterDateTimeInput)
+    date = forms.DateTimeField(
+        initial=datetime.datetime.now,
+        widget=BetterDateTimeInput)
 
     def __init__(self, request, *args, **kwargs):
         super(MovieForm, self).__init__(*args, **kwargs)
 
-        self.fields["collection"].queryset = Collection.objects.filter(user=request.user)
+        self.fields["collection"].queryset = Collection.objects.filter(
+            user=request.user)
 
         self.helper = FormHelper()
         self.helper.form_class = "form-horizontal"
@@ -57,15 +66,27 @@ class MovieForm(forms.ModelForm):
         self.helper.html5_required = True
         self.helper.layout = Layout(
             TabHolder(
-                Tab('Basic',
-                    Field('title', css_class="input-xlarge movie-title-typeahead"),
-                    PrependedText('date', '<i class="icon-calendar"></i>', css_class="input-medium"),
+                Tab(
+                    'Basic',
+                    Field(
+                        'title',
+                        css_class="input-xlarge movie-title-typeahead"),
+                    PrependedText(
+                        'date',
+                        '<i class="icon-calendar"></i>',
+                        css_class="input-medium"),
                     Field('tags', type="hidden"),
-                    Field('jstags', css_class="input-small tagManager", placeholder="Tag"),
+                    Field(
+                        'jstags',
+                        css_class="input-small tagManager",
+                        placeholder="Tag"),
                 ),
-                Tab('Advanced',
+                Tab(
+                    'Advanced',
                     Field('collection', css_class="input-medium"),
-                    Field('imdb_id', css_class="movie-imdb_id-typeahead input-small"),
+                    Field(
+                        'imdb_id',
+                        css_class="movie-imdb_id-typeahead input-small"),
                 ),
             ),
             FormActions(
@@ -82,30 +103,55 @@ class MovieEditForm(MovieForm):
         self.fields['title'].initial = instance.movie.title
         self.fields['imdb_id'].initial = instance.movie.imdb_id
         self.fields['date'].initial = instance.date
-        self.fields['jstags'].initial = ",".join([x.name for x in instance.tags.all()])
+        tag_names = [x.name for x in instance.tags.all()]
+        self.fields['jstags'].initial = ",".join(tag_names)
 
         side_effect_title = "These affects to all movie items."
-        side_effect_message = "If movie IMDB ID or title is modified then all related 'watch dates' or related collections are also changed."
+        side_effect_message = "If movie IMDB ID or title is modified " \
+                              "then all related 'watch dates' or related " \
+                              "collections are also changed."
+
+        side_effect_alert = HTML(
+            '<div class="alert alert-warning alert-block"><strong>' +
+            side_effect_title +
+            '</strong><p>' +
+            side_effect_message +
+            '</p></div>'
+        )
+
+        cancel_url = reverse('detail-movie', args=(instance.id,))
 
         self.helper.layout = Layout(
             TabHolder(
                 Tab(
                     'Movie item',
-                    PrependedText('date', '<i class="icon-calendar"></i>', css_class="input-medium"),
+                    PrependedText(
+                        'date',
+                        '<i class="icon-calendar"></i>',
+                        css_class="input-medium"
+                    ),
                     Field('collection', css_class="input-medium"),
                     Field('tags', type="hidden"),
-                    Field('jstags', css_class="input-small tagManager", placeholder="Tag"),
+                    Field(
+                        'jstags',
+                        css_class="input-small tagManager",
+                        placeholder="Tag"),
                 ),
                 Tab(
                     'Movie',
-                    HTML('<div class="alert alert-warning alert-block"><strong>' + side_effect_title + '</strong><p>' + side_effect_message + '</p></div>'),
-                    Field('title', css_class="input-xlarge movie-title-typeahead"),
-                    Field('imdb_id', css_class="movie-imdb_id-typeahead input-small"),
+                    side_effect_alert,
+                    Field(
+                        'title',
+                        css_class="input-xlarge movie-title-typeahead"),
+                    Field(
+                        'imdb_id',
+                        css_class="movie-imdb_id-typeahead input-small"),
                 )
             ),
             FormActions(
                 Submit("submit", "Save"),
-                HTML('<a class="btn" href="' + reverse('detail-movie', args=(instance.id,)) + '">Cancel</a>')
+                HTML(
+                    '<a class="btn" href="' + cancel_url + '">Cancel</a>')
             )
         )
 
@@ -139,5 +185,7 @@ class MovieSearchForm(SearchForm):
         self.helper.form_method = "get"
         self.helper.form_class = "form-horizontal form-search"
         self.helper.layout = Layout(
-                    FieldWithButtons(Field('q', css_class="search-query"), Submit("submit", "Search"), css_class="input-search"),
-            )
+                FieldWithButtons(
+                    Field('q', css_class="search-query"),
+                    Submit("submit", "Search"), css_class="input-search"),
+        )
