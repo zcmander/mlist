@@ -1,6 +1,8 @@
 MList
 =====
 
+[![Build Status](https://travis-ci.org/zcmander/mlist.svg?branch=master)](https://travis-ci.org/zcmander/mlist)
+
 MList is a software to keep track of the watched movies or just the favorite ones.
 
 ![Screenshot of the movie details][movie_details]
