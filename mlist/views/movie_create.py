@@ -31,8 +31,7 @@ class MovieCreate(FormView):
 
         collection_query = Collection.objects.filter(user=self.request.user,
                                                      title=collection_title)
-        if collection_query:
-            collection = collection_query.get()
+        collection = collection_query.first()
 
         return {
             'title': self.request.GET.get("title"),

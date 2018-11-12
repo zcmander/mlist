@@ -165,3 +165,5 @@ pip-log.txt
 
 # Debug
 MList.db
+htmlcov/
+mlistsite/whoosh_index/
