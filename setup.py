@@ -18,7 +18,9 @@ setup(name='mlist',
           'simplejson',
           'unicodecsv',
           'flake8',
-          'mock'
+          'mock',
+          'coverage',
+          'coveralls'
       ],
       packages=find_packages(),
       scripts=['manage.py'])
