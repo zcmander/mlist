@@ -1,7 +1,7 @@
 from datetime import datetime
 
 import unicodecsv as csv
-from six import StringIO
+from six import BytesIO
 
 from django.urls import reverse
 from django.views.generic import FormView
@@ -21,9 +21,9 @@ class MovieImport(FormView):
     success_message = "All movies imported successfully!"
 
     def form_valid(self, form):
-        csv_data = form.cleaned_data['data']
-        csv_file = StringIO.StringIO(csv_data)
-        reader = csv.reader(csv_file, delimiter=",", quotechar="\"")
+        csv_data = form.cleaned_data['data'].encode("utf-8")
+        csv_file = BytesIO(csv_data)
+        reader = csv.reader(csv_file, delimiter=",", quotechar="\"", encoding="utf-8")
 
         for row in reader:
             title = row[2]
