@@ -6,7 +6,7 @@ from mlist.models import User, Collection, MovieInCollection, Movie
 from mlist.search_indexes import MovieInCollectionIndex
 
 
-class TestMovieList(TestCase):
+class TestMovieSearch(TestCase):
     def setUp(self):
         self.request_factory = RequestFactory()
         self.user = User.objects.create_user(
