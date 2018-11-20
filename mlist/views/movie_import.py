@@ -23,7 +23,8 @@ class MovieImport(FormView):
     def form_valid(self, form):
         csv_data = form.cleaned_data['data'].encode("utf-8")
         csv_file = BytesIO(csv_data)
-        reader = csv.reader(csv_file, delimiter=",", quotechar="\"", encoding="utf-8")
+        reader = csv.reader(
+            csv_file, delimiter=",", quotechar="\"", encoding="utf-8")
 
         for row in reader:
             title = row[2]

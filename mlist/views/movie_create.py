@@ -67,7 +67,9 @@ class MovieCreate(FormView):
             movie.imdb_id = None
             movie.save()
 
-        if not movie or not movie.imdb_id or not IMDBMovie.objects.filter(imdb_id=movie.imdb_id).all():
+        if not movie or \
+           not movie.imdb_id or \
+           not IMDBMovie.objects.filter(imdb_id=movie.imdb_id).all():
 
             try:
                 if imdb_id:
@@ -75,7 +77,11 @@ class MovieCreate(FormView):
                 else:
                     imdb_movie = IMDBMovie.create(title=title)
             except Exception as exc:
-                messages.error(self.request, u"<strong>Error while fetching IMDB information:</strong>" + exc.__class__.__name__ + u":" + str(exc), extra_tags='safe')
+                messages.error(
+                    self.request,
+                    "<strong>Error while fetching IMDB information:</strong>" +
+                    exc.__class__.__name__ + u":" + str(exc),
+                    extra_tags='safe')
 
             if imdb_movie and imdb_movie.imdb_id:
                 try:
@@ -83,19 +89,28 @@ class MovieCreate(FormView):
                 except Movie.DoesNotExist:
                     pass
 
-            if imdb_movie and not IMDBMovie.objects.filter(imdb_id=imdb_movie.imdb_id).all():
+            if imdb_movie and \
+               not IMDBMovie.objects.filter(imdb_id=imdb_movie.imdb_id).all():
                 imdb_movie.save()
 
-                if movie and not movie.imdb_id:  # If movie without IMDB ID then update it
+                # If movie without IMDB ID then update it
+                if movie and not movie.imdb_id:
                     movie.imdb_id = imdb_movie.imdb_id
                     movie.save()
 
-        if movie.imdb_id and not TMDBMovie.objects.filter(imdb_id=movie.imdb_id).all():
+        if movie.imdb_id and \
+           not TMDBMovie.objects.filter(imdb_id=movie.imdb_id).all():
             try:
-                tmdb_movie = TMDBMovie.create(movie.get_title(), imdb_id=movie.imdb_id)
+                tmdb_movie = TMDBMovie.create(
+                    movie.get_title(),
+                    imdb_id=movie.imdb_id)
                 tmdb_movie.save()
             except Exception as exc:
-                messages.error(self.request, u"<strong>Error while fetching TMDB information:</strong>" + str(exc.__class__.__name__) + u":" + str(exc), extra_tags='safe')
+                messages.error(
+                    self.request,
+                    "<strong>Error while fetching TMDB information:</strong>" +
+                    str(exc.__class__.__name__) + u":" + str(exc),
+                    extra_tags='safe')
 
         mic = MovieInCollection()
         mic.movie = movie
