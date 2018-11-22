@@ -6,3 +6,4 @@ from .movie_export_test import *
 from .movie_import_test import *
 from .movie_list_test import *
 from .movie_search_test import *
+from .movie_update_test import *
