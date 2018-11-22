@@ -3,6 +3,8 @@ MList
 
 [![Build Status](https://travis-ci.org/zcmander/mlist.svg?branch=master)](https://travis-ci.org/zcmander/mlist)
 [![Coverage Status](https://coveralls.io/repos/github/zcmander/mlist/badge.svg?branch=master)](https://coveralls.io/github/zcmander/mlist?branch=master)
+[![Documentation Status](https://readthedocs.org/projects/mlist/badge/?version=latest)](https://mlist.readthedocs.io/en/latest/?badge=latest)
+
 
 MList is a software to keep track of the watched movies or just the favorite ones.
 
