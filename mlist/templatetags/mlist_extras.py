@@ -15,6 +15,7 @@ class RangeNode(Node):
         context[self.context_name] = range(*self.range_args)
         return ""
 
+
 @register.tag
 def mkrange(parser, token):
     """
@@ -41,8 +42,8 @@ def mkrange(parser, token):
 
     def error():
         raise TemplateSyntaxError(
-            "%s accepts the syntax: {%% %s [start,] " + \
-            "stop[, step] as context_name %%}, where 'start', 'stop' " + \
+            "%s accepts the syntax: {%% %s [start,] " +
+            "stop[, step] as context_name %%}, where 'start', 'stop' " +
             "and 'step' must all be integers." % (fnctl))
 
     range_args = []
@@ -88,7 +89,7 @@ def tag_list(tags):
     for tag in tags:
         splitted = str(tag).split(":")
         if len(splitted) > 1:
-            processed_tags.append(Tag(splitted[0], ':'.join(splitted[1:]) ))
+            processed_tags.append(Tag(splitted[0], ':'.join(splitted[1:])))
         else:
             processed_tags.append(Tag('bookmark', splitted[0]))
 
@@ -106,15 +107,18 @@ def genre_list(imdb_genres, tmdb_genres):
     raw_tmdb_genres = set([x.strip() for x in tmdb_genres.split(',') if x])
 
     if 'Science Fiction' in raw_tmdb_genres:
-        raw_tmdb_genres = (raw_tmdb_genres - set(["Science Fiction"])) | set(["Sci-Fi"])
+        raw_tmdb_genres = \
+            (raw_tmdb_genres - set(["Science Fiction"])) | set(["Sci-Fi"])
 
     set_common_genres = raw_imdb_genres & raw_tmdb_genres
     set_imdb_genres = raw_imdb_genres - set_common_genres
     set_tmdb_genres = raw_tmdb_genres - set_common_genres
 
-    return {'common_genres': sorted(set_common_genres),
-            'imdb_genres': sorted(set_imdb_genres),
-            'tmdb_genres': sorted(set_tmdb_genres)}
+    return {
+        'common_genres': sorted(set_common_genres),
+        'imdb_genres': sorted(set_imdb_genres),
+        'tmdb_genres': sorted(set_tmdb_genres)
+    }
 
 
 @register.inclusion_tag("mlist/tags/br_list.html")
@@ -128,19 +132,33 @@ def br_list(text):
 @register.simple_tag
 def movie_stars(value):
     converted_value = (float(value))
-    string_converted_value = u'<small class="pull-right">' + str(converted_value) + "</small>"
+
+    string_converted_value = u'<small class="pull-right">'
+    string_converted_value += str(converted_value)
+    string_converted_value += "</small>"
+
     star = u'<i class="icon-star"></i>'
-    #star_empty = u'<i class="icon-star-empty"></i>'
+
+    # star_empty = u'<i class="icon-star-empty"></i>'
     star_empty = ''
-    return mark_safe(star * int(converted_value) + star_empty * (10 - int(converted_value)) + u" " + string_converted_value)
+
+    return mark_safe(
+        star * int(converted_value) +  # Filled stars
+        star_empty * (10 - int(converted_value)) +  # Empty stars
+        u" " +
+        string_converted_value
+    )
 
 
 def get_query_string(p, new_params=None, remove=None):
     """
     Add and remove query parameters. From `django.contrib.admin`.
     """
-    if new_params is None: new_params = {}
-    if remove is None: remove = []
+    if new_params is None:
+        new_params = {}
+    if remove is None:
+        remove = []
+
     for r in remove:
         for k in p.keys():
             if k.startswith(r):
@@ -150,7 +168,11 @@ def get_query_string(p, new_params=None, remove=None):
             del p[k]
         elif v is not None:
             p[k] = v
-    return mark_safe('?' + '&amp;'.join([u'%s=%s' % (k, v) for k, v in p.items()]).replace(' ', '%20'))
+    return mark_safe(
+        '?' + '&amp;'.join(
+            [u'%s=%s' % (k, v) for k, v in p.items()]
+        ).replace(' ', '%20')
+    )
 
 
 def string_to_dict(string):
@@ -169,10 +191,12 @@ def string_to_dict(string):
             string += ','
         for arg in string.split(','):
             arg = arg.strip()
-            if arg == '': continue
+            if arg == '':
+                continue
             kw, val = arg.split('=', 1)
             kwargs[kw] = val
     return kwargs
+
 
 def string_to_list(string):
     """
@@ -188,9 +212,11 @@ def string_to_list(string):
             string += ','
         for arg in string.split(','):
             arg = arg.strip()
-            if arg == '': continue
+            if arg == '':
+                continue
             args.append(arg)
     return args
+
 
 @register.inclusion_tag('_response.html', takes_context=True)
 def query_string(context, add=None, remove=None):
@@ -207,6 +233,6 @@ def query_string(context, add=None, remove=None):
     # Written as an inclusion tag to simplify getting the context.
     add = string_to_dict(add)
     remove = string_to_list(remove)
-    params = dict( context['request'].GET.items())
+    params = dict(context['request'].GET.items())
     response = get_query_string(params, add, remove)
-    return {'response': response }
+    return {'response': response}

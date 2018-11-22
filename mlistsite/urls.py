@@ -29,8 +29,10 @@ from mlist.forms import MovieSearchForm
 admin.autodiscover()
 
 urlpatterns = [
-    url(r'^list$', MovieList.as_view(), {'collection': 'watched'}, name="list-movies"),
-    url(r'^list/(?P<collection>.*)/$', MovieList.as_view(), name="list-movies"),
+    url(r'^list$', MovieList.as_view(), {'collection': 'watched'},
+        name="list-movies"),
+    url(r'^list/(?P<collection>.*)/$', MovieList.as_view(),
+        name="list-movies"),
 
     url(r'^add$', MovieCreate.as_view(), name="add-movie"),
     url(r'^update/(?P<pk>\d+)/$', MovieUpdate.as_view(), name="update-movie"),
@@ -38,8 +40,10 @@ urlpatterns = [
     url(r'^import$', MovieImport.as_view(), name='import-movies'),
     url(r'^movies/(?P<pk>\d+)/$', MovieDetail.as_view(), name="detail-movie"),
 
-    url(r'^delete-collection/(?P<pk>\d+)/$', CollectionDelete.as_view(), name="delete-collection"),
-    url(r'^create-collection$', CollectionCreate.as_view(), name="create-collection"),
+    url(r'^delete-collection/(?P<pk>\d+)/$', CollectionDelete.as_view(),
+        name="delete-collection"),
+    url(r'^create-collection$', CollectionCreate.as_view(),
+        name="create-collection"),
 ]
 
 urlpatterns += [
@@ -70,7 +74,6 @@ urlpatterns += [
 urlpatterns += [
     url(r'^static/(?P<path>.*)$', serve,
         {'document_root': settings.STATIC_ROOT}),
-    
     path('admin/', admin.site.urls),
 ]
 

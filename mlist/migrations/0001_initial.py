@@ -21,15 +21,25 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Collection',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(
+                    auto_created=True,
+                    primary_key=True,
+                    serialize=False, verbose_name='ID')),
                 ('title', models.CharField(max_length=200)),
             ],
         ),
         migrations.CreateModel(
             name='IMDBMovie',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('imdb_id', models.CharField(db_index=True, max_length=255, unique=True)),
+                ('id', models.AutoField(
+                    auto_created=True,
+                    primary_key=True,
+                    serialize=False,
+                    verbose_name='ID')),
+                ('imdb_id', models.CharField(
+                    db_index=True,
+                    max_length=255,
+                    unique=True)),
                 ('title', models.CharField(max_length=255)),
                 ('year', models.IntegerField(null=True)),
                 ('rated', models.CharField(max_length=255, null=True)),
@@ -49,9 +59,16 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='Movie',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(
+                    auto_created=True,
+                    primary_key=True,
+                    serialize=False,
+                    verbose_name='ID')),
                 ('title', models.CharField(max_length=200)),
-                ('imdb_id', models.CharField(blank=True, max_length=200, null=True)),
+                ('imdb_id', models.CharField(
+                    blank=True,
+                    max_length=200,
+                    null=True)),
             ],
             options={
                 'permissions': (('update_movie', 'Can update movie'),),
@@ -60,18 +77,38 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='MovieInCollection',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('id', models.AutoField(
+                    auto_created=True,
+                    primary_key=True,
+                    serialize=False,
+                    verbose_name='ID')),
                 ('date', models.DateTimeField()),
-                ('collection', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='mlist.Collection')),
-                ('movie', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='mlist.Movie')),
-                ('tags', taggit.managers.TaggableManager(blank=True, help_text='A comma-separated list of tags.', through='taggit.TaggedItem', to='taggit.Tag', verbose_name='Tags')),
+                ('collection', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    to='mlist.Collection')),
+                ('movie', models.ForeignKey(
+                    on_delete=django.db.models.deletion.CASCADE,
+                    to='mlist.Movie')),
+                ('tags', taggit.managers.TaggableManager(
+                    blank=True,
+                    help_text='A comma-separated list of tags.',
+                    through='taggit.TaggedItem',
+                    to='taggit.Tag',
+                    verbose_name='Tags')),
             ],
         ),
         migrations.CreateModel(
             name='TMDBMovie',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('imdb_id', models.CharField(db_index=True, max_length=255, unique=True)),
+                ('id', models.AutoField(
+                    auto_created=True,
+                    primary_key=True,
+                    serialize=False,
+                    verbose_name='ID')),
+                ('imdb_id', models.CharField(
+                    db_index=True,
+                    max_length=255,
+                    unique=True)),
                 ('tmdb_id', models.CharField(max_length=255, unique=True)),
                 ('original_title', models.CharField(max_length=255)),
                 ('title', models.CharField(max_length=255)),
@@ -97,11 +134,16 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='collection',
             name='movies',
-            field=models.ManyToManyField(blank=True, through='mlist.MovieInCollection', to='mlist.Movie'),
+            field=models.ManyToManyField(
+                blank=True,
+                through='mlist.MovieInCollection',
+                to='mlist.Movie'),
         ),
         migrations.AddField(
             model_name='collection',
             name='user',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to=settings.AUTH_USER_MODEL),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                to=settings.AUTH_USER_MODEL),
         ),
     ]

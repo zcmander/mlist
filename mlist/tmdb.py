@@ -21,23 +21,40 @@ def configure(api_key):
 
     config['apikey'] = api_key
     config['urls'] = {}
-    config['urls']['movie.search'] = baseUrl + "/search/movie?query=%%s&api_key=%(apikey)s&page=%%s" % (config)
-    config['urls']['movie.info'] = baseUrl + "/movie/%%s?api_key=%(apikey)s" % (config)
-    config['urls']['people.search'] = baseUrl + "/search/person?query=%%s&api_key=%(apikey)s&page=%%s" % (config)
-    config['urls']['collection.info'] = baseUrl + "/collection/%%s&api_key=%(apikey)s" % (config)
-    config['urls']['movie.alternativetitles'] = baseUrl + "/movie/%%s/alternative_titles?api_key=%(apikey)s" % (config)
-    config['urls']['movie.casts'] = baseUrl + "/movie/%%s/casts?api_key=%(apikey)s" % (config)
-    config['urls']['movie.images'] = baseUrl + "/movie/%%s/images?api_key=%(apikey)s" % (config)
-    config['urls']['movie.keywords'] = baseUrl + "/movie/%%s/keywords?api_key=%(apikey)s" % (config)
-    config['urls']['movie.releases'] = baseUrl + "/movie/%%s/releases?api_key=%(apikey)s" % (config)
-    config['urls']['movie.trailers'] = baseUrl + "/movie/%%s/trailers?api_key=%(apikey)s" % (config)
-    config['urls']['movie.translations'] = baseUrl + "/movie/%%s/translations?api_key=%(apikey)s" % (config)
-    config['urls']['person.info'] = baseUrl + "/person/%%s?api_key=%(apikey)s&append_to_response=images,credits" % (config)
-    config['urls']['latestmovie'] = baseUrl + "/latest/movie?api_key=%(apikey)s" % (config)
-    config['urls']['config'] = baseUrl + "/configuration?api_key=%(apikey)s" % (config)
-    config['urls']['request.token'] = baseUrl + "/authentication/token/new?api_key=%(apikey)s" % (config)
-    config['urls']['session.id'] = baseUrl + "/authentication/session/new?api_key=%(apikey)s&request_token=%%s" % (config)
-    config['urls']['movie.add.rating'] = baseUrl + "/movie/%%s/rating?session_id=%%s&api_key=%(apikey)s" % (config)
+    config['urls']['movie.search'] =\
+        baseUrl + "/search/movie?query=%%s&api_key=%(apikey)s&page=%%s" % (config)
+    config['urls']['movie.info'] = \
+        baseUrl + "/movie/%%s?api_key=%(apikey)s" % (config)
+    config['urls']['people.search'] = \
+        baseUrl + "/search/person?query=%%s&api_key=%(apikey)s&page=%%s" % (config)
+    config['urls']['collection.info'] = \
+        baseUrl + "/collection/%%s&api_key=%(apikey)s" % (config)
+    config['urls']['movie.alternativetitles'] = \
+        baseUrl + "/movie/%%s/alternative_titles?api_key=%(apikey)s" % (config)
+    config['urls']['movie.casts'] = \
+        baseUrl + "/movie/%%s/casts?api_key=%(apikey)s" % (config)
+    config['urls']['movie.images'] = \
+        baseUrl + "/movie/%%s/images?api_key=%(apikey)s" % (config)
+    config['urls']['movie.keywords'] = \
+        baseUrl + "/movie/%%s/keywords?api_key=%(apikey)s" % (config)
+    config['urls']['movie.releases'] = \
+        baseUrl + "/movie/%%s/releases?api_key=%(apikey)s" % (config)
+    config['urls']['movie.trailers'] = \
+        baseUrl + "/movie/%%s/trailers?api_key=%(apikey)s" % (config)
+    config['urls']['movie.translations'] = \
+        baseUrl + "/movie/%%s/translations?api_key=%(apikey)s" % (config)
+    config['urls']['person.info'] = \
+        baseUrl + "/person/%%s?api_key=%(apikey)s&append_to_response=images,credits" % (config)
+    config['urls']['latestmovie'] = \
+        baseUrl + "/latest/movie?api_key=%(apikey)s" % (config)
+    config['urls']['config'] = \
+        baseUrl + "/configuration?api_key=%(apikey)s" % (config)
+    config['urls']['request.token'] = \
+        baseUrl + "/authentication/token/new?api_key=%(apikey)s" % (config)
+    config['urls']['session.id'] = \
+        baseUrl + "/authentication/session/new?api_key=%(apikey)s&request_token=%%s" % (config)
+    config['urls']['movie.add.rating'] = \
+        baseUrl + "/movie/%%s/rating?session_id=%%s&api_key=%(apikey)s" % (config)
     config['api'] = {}
     config['api']['backdrop.sizes'] = ""
     config['api']['base.url'] = ""
@@ -79,7 +96,7 @@ class Core(object):
     def poster_sizes(self, img_size):
         size_list = {
             's': 'w92',
-            'm': 'w185', 
+            'm': 'w185',
             'l': 'w500',
             'o': 'original'
         }

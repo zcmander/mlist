@@ -2,7 +2,7 @@
 import os
 from django.contrib.messages import constants as messages
 
-DEBUG = True #False
+DEBUG = True  # False
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -13,12 +13,12 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'MList.db',                      # Or path to database file if using sqlite3.
-        'USER': '',                      # Not used with sqlite3.
-        'PASSWORD': '',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': 'MList.db',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '',
+        'PORT': '',
     }
 }
 
@@ -31,7 +31,7 @@ DATABASES = {
 # system time zone.
 TIME_ZONE = 'Europe/Helsinki'
 
-#FORCE_SCRIPT_NAME = "/mlist"
+# FORCE_SCRIPT_NAME = "/mlist"
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -63,7 +63,7 @@ SHORT_DATE_FORMAT = "j.n.Y"
 DATE_FORMAT = "j. F Y"
 
 SHORT_DATETIME_FORMAT = "j.n.Y H:i:s"
-DATETIME_FORMAT = "j. E Y k\l\o H:i:s"
+DATETIME_FORMAT = r"j. E Y k\l\o H:i:s"
 
 
 # Absolute path to the directory static files should be collected to.
@@ -91,7 +91,7 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-#    'django.contrib.staticfiles.finders.DefaultStorageFinder',
+    # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
 # Make this unique, and don't share it with anybody.
@@ -100,7 +100,7 @@ SECRET_KEY = 'jji@wnv-0uo=hspv03y9zcfvv%wb8cv3wz8)jra1f8y$**5-r&amp;'
 MIDDLEWARE = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    #'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
@@ -141,7 +141,7 @@ DEBUG_TOOLBAR_CONFIG = {
     'INTERCEPT_REDIRECTS': False,
     'HIDE_DJANGO_SQL': False,
     'TAG': 'div',
-    'ENABLE_STACKTRACES' : True,
+    'ENABLE_STACKTRACES': True,
 }
 
 
@@ -189,7 +189,7 @@ HAYSTACK_CONNECTIONS = {
     },
 }
 
-LOGIN_URL="/"
+LOGIN_URL = "/"
 
 TEMPLATES = [
     {
