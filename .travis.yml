@@ -2,6 +2,7 @@ language: python
 python:
   - "3.6"
 install:
+  - pip install tox
   - pip install -e .
-script: coverage run manage.py test mlist
+script: tox
 after_success: coveralls
