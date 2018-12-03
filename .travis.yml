@@ -6,3 +6,5 @@ install:
   - pip install -e .
 script: tox
 after_success: coveralls
+deploy:
+  provider: azure_web_apps
