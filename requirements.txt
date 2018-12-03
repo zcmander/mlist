@@ -1,0 +1,16 @@
+django
+django-crispy-forms
+django-tastypie
+django-taggit
+django-debug-toolbar
+django-haystack
+requests
+Whoosh
+mimeparse
+pytz
+simplejson
+unicodecsv
+flake8
+mock
+coverage
+coveralls
