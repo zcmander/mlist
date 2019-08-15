@@ -31,7 +31,7 @@ style='background-size: cover; background-position-x: center; background-image: 
 style='background-image: url("{% static "img/gradient_squares.png" %}")'
 {% endif %}>
 
-    <nav class="navbar navbar-default navbar-fixed-top navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-default fixed-top navbar-expand-lg navbar-light bg-light">
         {% if user.is_authenticated %}
         <a class="navbar-brand" href="{% url 'list-movies' %}">MList</a>
         {% else %}
@@ -64,13 +64,19 @@ style='background-image: url("{% static "img/gradient_squares.png" %}")'
             {% endif %}
           </ul>
 
+          {% if user.is_authenticated %}
+          <form class="form-inline my-2 my-lg-0" method="get" action="{% url 'search' %}">
+            <input type="text" name="q" class="form-control" placeholder="Search">
+          </form>
+          {% endif %}
+
           <ul class="navbar-nav my-2 my-lg-0">
             {% if user.is_authenticated %}
               <li class="nav-item dropdown">
                 <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
                   {{ user.username }}
                 </a>
-                <div class="dropdown-menu">
+                <div class="dropdown-menu dropdown-menu-right">
                   <a class="dropdown-item" href="{% url 'statistics' %}">Statistics</a>
                   <a class="dropdown-item" href="{% url 'settings' %}">Settings</a>
                   <a class="dropdown-item" href="{% url 'import-movies' %}">Import / Export</a>
@@ -80,12 +86,6 @@ style='background-image: url("{% static "img/gradient_squares.png" %}")'
               </li>
             {% endif %}
           </ul>
-
-          {% if user.is_authenticated %}
-          <form class="form-inline my-2 my-lg-0" method="get" action="{% url 'search' %}">
-            <input type="text" name="q" class="search-query" placeholder="Search">
-          </form>
-          {% endif %}
         </div><!--/.nav-collapse -->
     </nav>
 

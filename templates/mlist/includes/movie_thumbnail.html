@@ -31,13 +31,13 @@
             <strong>Date:</strong> <span title="{{ mic.date|date }}">{{ mic.date|naturalday:"SHORT_DATE_FORMAT" }}</span><br />
             {% tag_list mic.tags.all %}
             {% if not movie.imdb_id %}
-              <span class="badge badge-important" title="No IMDB ID set for this movie."><i class="icon-flag icon-white"></i> IMDB</span>
+              <span class="badge badge-important" title="No IMDB ID set for this movie."><i class="fa fa-flag"></i> IMDB</span>
             {% else %}
               {% if not movie.has_imdb %}
-                <span class="badge badge-warning" title="No TMDB information available."><i class="icon-flag icon-white"></i> IMDB</span>
+                <span class="badge badge-warning" title="No TMDB information available."><i class="fa fa-flag"></i> IMDB</span>
               {% endif %}
               {% if not movie.has_tmdb %}
-                <span class="badge badge-warning" title="No TMDB information available."><i class="icon-flag icon-white"></i> TMDB</span>
+                <span class="badge badge-warning" title="No TMDB information available."><i class="fa fa-flag"></i> TMDB</span>
               {% endif %}
             {% endif %}
             </small>

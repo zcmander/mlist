@@ -5,49 +5,54 @@
 
         <h4>Overview</h4>
 
-        <dl class="dl-horizontal movie-details">
-
+        <div class="row movie-details">
             {% if tmdb and imdb.title != tmdb.original_title  %}
-            <dt>Orginal Title:</dt><dd>{{tmdb.original_title}}</dd>
+                <div class="col-4 title">Orginal Title:</div>
+                <div class="col-8 body">{{tmdb.original_title}}</div>
             {% endif %}
 
             {% if imdb %}
-                <dt>Released:</dt><dd>{{ imdb.released }} <strong>({{imdb.year}})</strong></dd>
+                <div class="col-4 title">Released:</div>
+                <div class="col-8 body">{{ imdb.released }} <strong>({{imdb.year}})</strong></div>
             {% endif %}
 
             {% if imdb or tmdb %}
-            <dt>Runtime:</dt><dd>{{imdb.runtime}} ({{tmdb.runtime|default:"Unknown"}} minutes)</dd>
+            <div class="col-4 title">Runtime:</div>
+            <div class="col-8 body">{{imdb.runtime}} ({{tmdb.runtime|default:"Unknown"}} minutes)</div>
 
-            <dt>Genres:</dt>
-            <dd>
+            <div class="col-4 title">Genres:</div>
+            <div class="col-8">
                 {% genre_list imdb.genre tmdb.genres %}
                 {% if tmdb.adult %}
                     <span class="badge badge-danger">Adult</span>
                 {% endif %}
-            </dd>
+            </div>
             {% endif %}
-        </dl>
+        </div>
 
-        <dl class="dl-horizontal movie-details">
+        <div class="row movie-details">
             {% if imdb %}
-                <dt>IMDB Rating:</dt><dd title="({{imdb.votes}} votes)">
-                {% movie_stars imdb.rating %}
-                </dd>
+                <div class="col-6 title">IMDB Rating:</div>
+                <div class="col-6 text-right body" title="({{imdb.votes}} votes)">
+                    {% movie_stars imdb.rating %}
+                </div>
             {% endif %}
 
             {% if tmdb %}
-            <dt>TMDB Rating:</dt><dd title="({{tmdb.vote_count}} votes)">
-            {% movie_stars tmdb.vote_average %}
+                <div class="col-6 title">TMDB Rating:</div>
+                <div class="col-6 text-right body" title="({{tmdb.vote_count}} votes)">
+                    {% movie_stars tmdb.vote_average %}
+                </div>
             {% endif %}
-        </dl>
+        </div>
     </div>
 
     <div class="movie-block">
         <h4>Share</h4>
         <p>
             {% if mic.movie.imdb_id %}
-            <script>function fbs_click() {u="http://imdb.com/title/{{mic.movie.imdb_id}}";t=document.title;window.open('http://www.facebook.com/sharer.php?u='+encodeURIComponent(u)+'&t='+encodeURIComponent(t),'sharer','toolbar=0,status=0,width=626,height=436');return false;}</script>
-            <a rel="nofollow" href="http://www.facebook.com/sharer.php?u=http://imdb.com/title/{{mic.movie.imdb_id}}" onclick="return fbs_click()" target="_blank" class="fb_share_link btn btn-medium btn-primary"><i class="icon-share icon-white"></i> Share on Facebook</a>
+                <script>function fbs_click() {u="http://imdb.com/title/{{mic.movie.imdb_id}}";t=document.title;window.open('http://www.facebook.com/sharer.php?u='+encodeURIComponent(u)+'&t='+encodeURIComponent(t),'sharer','toolbar=0,status=0,width=626,height=436');return false;}</script>
+                <a rel="nofollow" href="http://www.facebook.com/sharer.php?u=http://imdb.com/title/{{mic.movie.imdb_id}}" onclick="return fbs_click()" target="_blank" class="fb_share_link btn btn-medium btn-primary"><i class="fa fa-share"></i> Share on Facebook</a>
             {% endif %}
         </p>
     </div>

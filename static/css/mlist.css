@@ -31,14 +31,12 @@ body {
     background-color: rgba(255,255,255,0.95);
 }
 
-
-.movie-details dt {
-    text-align: left;
-    width: 100px; /* If dd margin-left: 180px; then width: 160px; */
+.movie-details {
+    margin-bottom: 1em;
 }
 
-.movie-details dd {
-    margin-left: 120px;
+.movie-details .title {
+    font-weight: bold;
 }
 
 .movie-title {
@@ -66,7 +64,7 @@ body {
     padding: 17px;
     -webkit-box-sizing: content-box;
     border-radius: 15px;
-    padding-top: 60px;
+    padding-top: 80px;
 }
 
 .mlist-container.mlist-movie-detail {

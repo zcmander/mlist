@@ -17,13 +17,13 @@ mlist-movie-detail
 
 <div class="row">
 {% if tmdb %}
-    <div class="span4 movie-cover">
+    <div class="col-4 movie-cover">
         <img src="{{ tmdb.large_poster_url }}" style="width:370px"/>
         {% include "mlist/includes/detail_user_control.html" %}
     </div>
-    <div class="span8">
+    <div class="col-8">
     {% else %}
-    <div class="offset2 span8">
+    <div class="offset-2 col-8">
 {% endif %}
 
 <h1 class="page-header movie-title" title="{{mic.movie.title}}">
@@ -31,32 +31,32 @@ mlist-movie-detail
 
     <div>
     {% if tmdb.tagline %}
-    <small class="tagline">{{tmdb.tagline}}</small>
+    <small class="tagline text-white">{{tmdb.tagline}}</small>
     {% endif %}
 
-    &nbsp;<span class="badge badge-inverse">{{imdb.rated}}</span>
+    &nbsp;<span class="badge badge-pill badge-secondary">{{imdb.rated}}</span>
     </div>
 </h1>
 
 <div class="row">
 
     {% if not tmdb %}
-        <div class="span8">
+        <div class="col-12">
             {% include "mlist/includes/detail_user_control.html" %}
         </div>
     {% endif %}
 
     {% if imdb or tmdb %}
-    <div class="span4">
+    <div class="col-6">
         {% include "mlist/includes/detail_movie_overview.html" %}
     </div>
 
-    <div class="span4">
+    <div class="col-6">
         {% include "mlist/includes/detail_movie_details.html" %}
     </div>
     {% endif %}
 
-    <div class="span8">
+    <div class="col-12">
         {% if imdb or tmdb %}
         {% include "mlist/includes/detail_movie_plot.html" %}
         {% endif %}
@@ -64,6 +64,6 @@ mlist-movie-detail
     </div>
 </div>
 
-</div> <!-- Span8 -!>
+</div>
 
 {% endblock %}

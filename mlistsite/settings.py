@@ -84,6 +84,7 @@ STATICFILES_DIRS = (
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
     os.path.join(os.path.dirname(__file__), '../static'),
+    os.path.join(os.path.dirname(__file__), '../node_modules/@fortawesome/fontawesome-free/webfonts'),
 )
 
 # List of finder classes that know how to find static files in
@@ -142,8 +143,6 @@ SASS_PROCESSOR_INCLUDE_DIRS = [
     os.path.join(BASE_DIR, 'node_modules'),
 ]
 
-print(SASS_PROCESSOR_INCLUDE_DIRS)
-
 SASS_PRECISION = 8
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
@@ -190,7 +189,7 @@ MESSAGE_TAGS = {
     messages.INFO: 'alert-info',
     messages.SUCCESS: 'alert-success',
     messages.WARNING: 'alert-warning',
-    messages.ERROR: 'alert-error',
+    messages.ERROR: 'alert-danger',
 }
 
 HAYSTACK_CONNECTIONS = {

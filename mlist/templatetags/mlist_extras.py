@@ -137,7 +137,7 @@ def movie_stars(value):
     string_converted_value += str(converted_value)
     string_converted_value += "</small>"
 
-    star = u'<i class="icon-star"></i>'
+    star = u'<i class="fa fa-star"></i>'
 
     # star_empty = u'<i class="icon-star-empty"></i>'
     star_empty = ''
