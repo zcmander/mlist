@@ -1,7 +1,7 @@
 {% for collection in collections %}
 <a class='dropdown-item' href="{% url 'list-movies' collection.title %}">{{collection.title}}
     {% if collection.movieincollection_set.count %}
-    <span class="badge badge-inverse pull-right">{{collection.movieincollection_set.count}}</span>
+    <span class="badge badge-dark pull-right">{{collection.movieincollection_set.count}}</span>
     {% endif %}
 </a>
 {% endfor %}
