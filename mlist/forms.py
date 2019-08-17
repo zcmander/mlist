@@ -108,7 +108,7 @@ class MovieEditForm(MovieForm):
                               "collections are also changed."
 
         side_effect_alert = HTML(
-            '<div class="alert alert-warning alert-block"><strong>' +
+            '<div class="alert alert-warning"><strong>' +
             side_effect_title +
             '</strong><p>' +
             side_effect_message +
