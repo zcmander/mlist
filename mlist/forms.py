@@ -33,6 +33,8 @@ class CollectionForm(forms.ModelForm):
         super(CollectionForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_class = "form-horizontal"
+        self.helper.label_class = 'col-3'
+        self.helper.field_class = 'col-9'
         self.helper.layout = Layout(
             'title',
             FormActions(
@@ -62,33 +64,27 @@ class MovieForm(forms.ModelForm):
         self.helper = FormHelper()
         self.helper.form_class = "form-horizontal"
         self.helper.help_text_inline = True
+        self.helper.label_class = 'col-3'
+        self.helper.field_class = 'col-9'
         self.helper.attrs['autocomplete'] = 'off'
         self.helper.html5_required = True
         self.helper.layout = Layout(
-            TabHolder(
-                Tab(
-                    'Basic',
-                    Field(
-                        'title',
-                        css_class="input-xlarge movie-title-typeahead"),
-                    PrependedText(
-                        'date',
-                        '<i class="icon-calendar"></i>',
-                        css_class="input-medium"),
-                    Field('tags', type="hidden"),
-                    Field(
-                        'jstags',
-                        css_class="input-small tagManager",
-                        placeholder="Tag"),
-                ),
-                Tab(
-                    'Advanced',
-                    Field('collection', css_class="input-medium"),
-                    Field(
-                        'imdb_id',
-                        css_class="movie-imdb_id-typeahead input-small"),
-                ),
-            ),
+            Field(
+                'title',
+                css_class="form-control-lg movie-title-typeahead"),
+            PrependedText(
+                'date',
+                '<i class="fa fa-calendar"></i>',
+                css_class="input-medium"),
+            Field('tags', type="hidden"),
+            Field(
+                'jstags',
+                css_class="tagManager",
+                placeholder="Tag"),
+            Field('collection', css_class="input-medium"),
+            Field(
+                'imdb_id',
+                css_class="movie-imdb_id-typeahead input-small"),
             FormActions(
                 Submit("submit", "Add")
             )
@@ -112,7 +108,7 @@ class MovieEditForm(MovieForm):
                               "collections are also changed."
 
         side_effect_alert = HTML(
-            '<div class="alert alert-warning alert-block"><strong>' +
+            '<div class="alert alert-warning"><strong>' +
             side_effect_title +
             '</strong><p>' +
             side_effect_message +
@@ -127,7 +123,7 @@ class MovieEditForm(MovieForm):
                     'Movie item',
                     PrependedText(
                         'date',
-                        '<i class="icon-calendar"></i>',
+                        '<i class="fa fa-calendar"></i>',
                         css_class="input-medium"
                     ),
                     Field('collection', css_class="input-medium"),
@@ -151,7 +147,7 @@ class MovieEditForm(MovieForm):
             FormActions(
                 Submit("submit", "Save"),
                 HTML(
-                    '<a class="btn" href="' + cancel_url + '">Cancel</a>')
+                    '<a class="btn btn-secondary" href="' + cancel_url + '">Cancel</a>')
             )
         )
 
@@ -167,6 +163,8 @@ class ImportForm(forms.Form):
         super(ImportForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_class = "form-horizontal"
+        self.helper.label_class = 'col-3'
+        self.helper.field_class = 'col-9'
         self.helper.layout = Layout(
             Fieldset(
                 'Import',

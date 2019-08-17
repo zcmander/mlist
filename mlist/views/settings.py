@@ -33,7 +33,8 @@ def settings_view(request):
         'movies_no_imdb_info': no_imdb_info,
         'movies_no_tmdb_info': no_tmdb_info,
         'movies_duplicate_imdb': duplicate_movies,
-        'collections': request.user.collection_set
+        'collections': request.user.collection_set,
+        'user': request.user,
     }
     return render_to_response("mlist/settings.html", render_dict)
 

@@ -89,7 +89,7 @@ var mlist = {
                     var result = $("<li>").append("Handling " + this.url);
                     results.append(result);
                     result.append(
-                            $("<div>").attr("class", "alert alert-error").append(
+                            $("<div>").attr("class", "alert alert-danger").append(
                                     $("<strong>").append(status),
                                     "<br />",
                                     errorThrown

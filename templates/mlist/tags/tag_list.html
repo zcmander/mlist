@@ -1,9 +1,9 @@
 {% for tag in tags %}
     <span class="badge badge-info">
         {% if tag.scope == 'media' %}
-            <i class="icon-film icon-white"></i>
+            <i class="fa fa-film"></i>
         {% else %}
-            <i class="icon-bookmark icon-white"></i>
+            <i class="fa fa-bookmark"></i>
         {% endif %}
         {{ tag.value }}
     </span>

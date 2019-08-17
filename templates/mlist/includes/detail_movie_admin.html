@@ -1,19 +1,22 @@
     <div class="movie-block">
         <h4>Admin</h4>
-        <dl class="dl-horizontal movie-meta">
+        <div class="row movie-details">
             {% if mic.movie.imdb_id %}
-                <dt>IMDB ID:</dt><dd>{{mic.movie.imdb_id}}</dd>
+                <div class="col-4 title">IMDB ID:</div>
+                <div class="col-6 body">{{mic.movie.imdb_id}}</div>
             {% endif %}
             {% if imdb %}
-                <dt>Last IMDB Update:</dt> <dd>{{imdb.update_date.date}}</dd>
+                <div class="col-4 title">Last IMDB Update:</div>
+                <div class="col-6 body">{{imdb.update_date.date}}</div>
             {% endif %}
             {% if tmdb %}
-            <dt>Last TMDB Update:</dt><dd>{{tmdb.update_date.date}}</dd>
+                <div class="col-4 title">Last TMDB Update:</div>
+                <div class="col-6 body">{{tmdb.update_date.date}}</div>
             {% endif %}
-        </dl>
+        </div>
 
-        <a class="btn btn-mini" href="{% url "update-movie" mic.id %}">
-            <i class="icon-pencil"></i>
+        <a class="btn btn-secondary btn-sm" href="{% url "update-movie" mic.id %}">
+            <i class="fa fa-edit"></i>
             Edit movie
         </a>
     </p>

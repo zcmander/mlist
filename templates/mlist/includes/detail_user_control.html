@@ -17,7 +17,7 @@
                 {% endif %}
                 </span>
 
-                <a class="close action-remove text-error" href="{% url "delete-movie" watched_mic.id %}">
+                <a class="close action-remove text-danger" href="{% url "delete-movie" watched_mic.id %}">
                     &times;
                 </a>
             </li>
@@ -25,8 +25,8 @@
     </ul>
 
     <h5>
-        <a class="btn btn-mini" href="{% url "add-movie" %}?title={{mic.movie.get_title}}&imdb_id={{mic.movie.imdb_id}}">
-            <i class="icon-plus"></i>
+        <a class="btn btn-secondary btn-sm" href="{% url "add-movie" %}?title={{mic.movie.get_title}}&imdb_id={{mic.movie.imdb_id}}">
+            <i class="fa fa-plus"></i>
             Add
         </a>
     </h5>
@@ -45,7 +45,7 @@
 
             {% tag_list collection_mic.tags.all %}
 
-            <a class="close action-remove text-error" href="{% url "delete-movie" collection_mic.id %}">
+            <a class="close action-remove text-danger" href="{% url "delete-movie" collection_mic.id %}">
                 &times;
             </a>
         </li>
@@ -53,8 +53,8 @@
     </ul>
 
     <h5>
-        <a class="btn btn-mini" href="{% url "add-movie" %}?title={{mic.movie.title}}&imdb_id={{mic.movie.imdb_id}}&collection=0">
-            <i class="icon-plus"></i>
+        <a class="btn btn-secondary btn-sm" href="{% url "add-movie" %}?title={{mic.movie.title}}&imdb_id={{mic.movie.imdb_id}}&collection=0">
+            <i class="fa fa-plus"></i>
             Add to collection
         </a>
     </h5>
