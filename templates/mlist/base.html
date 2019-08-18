@@ -24,7 +24,7 @@ style='background-size: cover; background-position-x: center; background-image: 
 style='background-image: url("{% static "img/gradient_squares.png" %}")'
 {% endif %}>
 
-    <nav class="navbar navbar-default fixed-top navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-dark fixed-top navbar-expand-lg navbar-dark bg-dark">
         {% if user.is_authenticated %}
         <a class="navbar-brand" href="{% url 'list-movies' %}">MList</a>
         {% else %}

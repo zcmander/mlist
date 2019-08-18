@@ -41,6 +41,7 @@ body {
 
 .movie-title {
     font-weight: 200;
+    line-height: 2em;
 }
 
 .movie-title .title {
@@ -54,16 +55,18 @@ body {
     background: black;
     padding: 3px;   
     opacity: 0.8;
+
+    line-height: 1em;
 }
 
 
 .mlist-container {
-    border: 1px solid #d4d4d4;
+    /* border: 1px solid #d4d4d4; */
     background-color: white;
-    box-shadow: 0px 1px 10px rgba(0,0,0,0.1);
+    /* box-shadow: 0px 1px 10px rgba(0,0,0,0.1); */
     padding: 17px;
     -webkit-box-sizing: content-box;
-    border-radius: 15px;
+    /* border-radius: 15px; */
     padding-top: 80px;
 }
 
@@ -101,6 +104,7 @@ body {
     background-color: white;
 }
 
-.form-actions {
-  background-color: transparent;
+.side-actions {
+    margin-left: 10px;
+    margin-right: 10px;
 }

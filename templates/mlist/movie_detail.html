@@ -17,11 +17,17 @@ mlist-movie-detail
 
 <div class="row">
 {% if tmdb %}
-    <div class="col-4 movie-cover">
-        <img src="{{ tmdb.large_poster_url }}" style="width:370px"/>
-        {% include "mlist/includes/detail_user_control.html" %}
+    <div class="col-md-4 movie-cover">
+        <div class="row">
+            <div class="col-6 col-md-12">
+                <img src="{{ tmdb.large_poster_url }}" class="img-fluid" />
+            </div>
+            <div class="col-6 col-md-12">
+                {% include "mlist/includes/detail_user_control.html" %}
+            </div>
+        </div>
     </div>
-    <div class="col-8">
+    <div class="col-md-8">
     {% else %}
     <div class="offset-2 col-8">
 {% endif %}
@@ -47,11 +53,11 @@ mlist-movie-detail
     {% endif %}
 
     {% if imdb or tmdb %}
-    <div class="col-6">
+    <div class="col-lg-6">
         {% include "mlist/includes/detail_movie_overview.html" %}
     </div>
 
-    <div class="col-6">
+    <div class="col-lg-6">
         {% include "mlist/includes/detail_movie_details.html" %}
     </div>
     {% endif %}
