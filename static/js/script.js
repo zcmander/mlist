@@ -44,7 +44,7 @@ var ajaxManager = (function() {
 var mlist = {
     settings: {},
 
-    movie_title_typeahead: function (typeahead, term) {
+    movie_title_typeahead: function (term, typeahead) {
         var searchData = null;
         $.getJSON("http://www.omdbapi.com/?callback=?&s=" + term,
             function(data) {
@@ -53,13 +53,13 @@ var mlist = {
                 for (i in data.Search) {
                     var movie = data.Search[i];
                     result.push({
-                        'value':movie.Title + " (" + movie.Year + ")",
+                        'name':movie.Title + " (" + movie.Year + ")",
                         'imdb_id': movie.imdbID,
                         'year': movie.Year,
                         'title': movie.Title
                     });
                 }
-                typeahead.process(result);
+                typeahead(result);
                 console.log(result)
             }
         );
@@ -107,7 +107,7 @@ var mlist = {
 
         $('.movie-title-typeahead').typeahead({
             source: mlist.movie_title_typeahead,
-            onselect: function(obj) {
+            afterSelect: function(obj) {
                 $('.movie-title-typeahead').val(obj['title']);
                 $('.movie-imdb_id-typeahead').val(obj['imdb_id']);
             }

@@ -108,3 +108,9 @@ body {
     margin-left: 10px;
     margin-right: 10px;
 }
+
+/* Fixes TagManager tags, because those styles are designed for bootstrap 2  */
+.myTag {
+    display: inline-block;
+    height: auto;
+}
