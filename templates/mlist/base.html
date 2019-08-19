@@ -12,10 +12,7 @@
 
     <meta name="viewport" content="width=device-width">
 
-    <link href="{% sass_src 'scss/app.scss' %}" rel="stylesheet" type="text/css" />
-
-    <link rel="stylesheet" href="{% static "css/bootstrap-tagmanager.css" %}" />
-    <link rel="stylesheet" href="{% static "css/mlist.css" %}" />
+    <link href="{% static 'app.css' %}" rel="stylesheet" type="text/css" />
 </head>
 <body
 {% if mic and tmdb and tmdb.backdrop_url %}
@@ -109,10 +106,8 @@ style='background-image: url("{% static "img/gradient_squares.png" %}")'
 
     </div> <!-- /container -->
 
-<script src="{% static "bundle.js" %}"></script>
-<script src="{% static "js/bootstrap-tagmanager.js" %}"></script>
-<script src="{% static "js/iso8601.min.js" %}"></script>
-<script src="{% static "js/script.js" %}"></script>
+<script src="{% static "app.js" %}"></script>
+
 <script type="text/javascript">
 $(function() {
   mlist.init({

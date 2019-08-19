@@ -1,3 +1,28 @@
+/* Global */
+
+body {
+    padding-bottom: 40px;
+}
+
+.container.img-polaroid {
+    background-color: rgba(255,255,255,0.95);
+}
+
+.mlist-container {
+    background-color: white;
+    padding: 17px;
+    box-sizing: content-box;
+    padding-top: 80px;
+}
+
+.mlist-container.mlist-movie-detail {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+}
+
+/* Movie list */
+
 .movielist li {
     height: 350px;
 }
@@ -13,22 +38,16 @@
 }
 
 @media (max-width: 767px) {
-.movielist li .caption {
-    text-align: left;
+    .movielist li .caption {
+        text-align: left;
+    }
 }
-}
+
+/* Movie details */
 
 .mic-list {
     list-style: none;
     padding-left: 0;
-}
-
-body {
-    padding-bottom: 40px;
-}
-
-.container.img-polaroid {
-    background-color: rgba(255,255,255,0.95);
 }
 
 .movie-details {
@@ -57,23 +76,6 @@ body {
     opacity: 0.8;
 
     line-height: 1em;
-}
-
-
-.mlist-container {
-    /* border: 1px solid #d4d4d4; */
-    background-color: white;
-    /* box-shadow: 0px 1px 10px rgba(0,0,0,0.1); */
-    padding: 17px;
-    -webkit-box-sizing: content-box;
-    /* border-radius: 15px; */
-    padding-top: 80px;
-}
-
-.mlist-container.mlist-movie-detail {
-    background-color: transparent;
-    border: none;
-    box-shadow: none;
 }
 
 .movie-block {
@@ -107,10 +109,4 @@ body {
 .side-actions {
     margin-left: 10px;
     margin-right: 10px;
-}
-
-/* Fixes TagManager tags, because those styles are designed for bootstrap 2  */
-.myTag {
-    display: inline-block;
-    height: auto;
 }
