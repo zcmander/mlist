@@ -10,6 +10,7 @@ import "bootstrap-tagsinput/dist/bootstrap-tagsinput-typeahead.css";
  * Old jquery site:
  */
 import "./js/script.js";
+import "./js/mlist-plot.js";
 import './css/mlist.css';
 
 /*

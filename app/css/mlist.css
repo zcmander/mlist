@@ -110,3 +110,11 @@ body {
     margin-left: 10px;
     margin-right: 10px;
 }
+
+.chart {
+    width: 100%;
+}
+
+.chart-pie {
+    min-height: 450px;
+}
