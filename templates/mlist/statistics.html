@@ -19,7 +19,7 @@
             <div class="caption">
               <h4>Tag distribution</h4>
             </div>
-          <div id="chart-media-distribution" class="chart"></div>
+          <div id="chart-media-distribution" class="chart chart-pie"></div>
         </div>
       </div>
       <div class="col-md-6">
@@ -27,7 +27,7 @@
             <div class="caption">
                 <h4>Genre distribution</h4>
             </div>
-          <div id="chart-genre-distribution" class="chart"></div>
+          <div id="chart-genre-distribution" class="chart chart-pie"></div>
         </div>
       </div>
       <div class="col-12">
@@ -74,7 +74,7 @@
 {% block script %}
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
-      google.load("visualization", "1", {packages:["corechart", "timeline", "annotationchart", "table"]});
+      google.load("visualization", "1", {packages:["corechart"]});
     </script>
     <script type="text/javascript">
     $(function() {
