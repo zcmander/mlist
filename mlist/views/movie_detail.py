@@ -20,8 +20,8 @@ class MovieDetail(DetailView):
         context['collections'] = qs.exclude(collection__title="watched").all()
 
         context['imdb'] = IMDBMovie.objects \
-            .filter(imdb_id=self.object.movie.imdb_id)[:1].first()
+            .filter(imdb_id=self.object.movie.imdb_id).first()
 
         context['tmdb'] = TMDBMovie.objects \
-            .filter(imdb_id=self.object.movie.imdb_id)[:1].first()
+            .filter(imdb_id=self.object.movie.imdb_id).first()
         return context

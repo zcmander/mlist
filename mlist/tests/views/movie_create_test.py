@@ -112,7 +112,7 @@ class AjaxTagListViewTest(TestCase):
         self.assertEqual(response.status_code, 200)
         content = json.loads(response.content)
 
-        tags = sorted(content["tags"], key=lambda x: x["tag"])
+        tags = sorted(content)
 
-        self.assertEqual(tags[0]["tag"], 'hello')
-        self.assertEqual(tags[1]["tag"], 'world')
+        self.assertEqual(tags[0], 'hello')
+        self.assertEqual(tags[1], 'world')
