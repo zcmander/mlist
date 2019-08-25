@@ -185,7 +185,7 @@ class Movie(models.Model):
     @property
     def has_imdb(self):
         return IMDBMovie.objects.filter(imdb_id=self.imdb_id).first()
-        
+
     @property
     def has_tmdb(self):
         return TMDBMovie.objects.filter(imdb_id=self.imdb_id).first()
