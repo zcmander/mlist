@@ -2,6 +2,9 @@
 import os
 from django.contrib.messages import constants as messages
 
+OMDB_APIKEY = os.getenv("OMDB_APIKEY")
+TMDB_APIKEY = os.getenv("TMDB_APIKEY")
+
 DEBUG = True  # False
 
 ADMINS = (

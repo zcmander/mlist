@@ -22,7 +22,7 @@ from mlist.views.movie_export import export_view, adv_export_view
 from mlist.views.settings import settings_view, merge_movie_view
 from mlist.views.statistics import statistics_view
 from mlist.views.movie_utils import fetch_imdb_view, fetch_tmdb_view
-from mlist.views.movie_create import ajax_taglist_view
+from mlist.views.movie_create import ajax_taglist_view, ajax_movie_list
 
 from mlist.forms import MovieSearchForm
 
@@ -60,6 +60,7 @@ urlpatterns += [
     url(r'^fetch-imdb/(?P<pk>\d+)/$', fetch_imdb_view, name="fetch-imdb"),
     url(r'^fetch-tmdb/(?P<pk>\d+)/$', fetch_tmdb_view, name="fetch-tmdb"),
     url(r'^ajax/tag-list$', ajax_taglist_view, name="ajax_taglist"),
+    url(r'^ajax/movies$', ajax_movie_list, name="ajax_movie_list"),
 ]
 
 # Haystack

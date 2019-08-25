@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib import admin
 from django.contrib.auth.models import User
+from django.conf import settings
 
 from taggit.managers import TaggableManager
 
@@ -8,7 +9,7 @@ from mlist.omdbapi import BackendOMDB
 
 from .tmdb import configure, Core, Movies, config
 
-configure("492ffa13c4f4eedb4599ee3a803487de")
+configure(settings.TMDB_APIKEY)
 
 core = Core()
 core.update_configuration()

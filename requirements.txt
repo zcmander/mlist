@@ -4,6 +4,7 @@ django-tastypie
 django-taggit
 django-debug-toolbar
 django-haystack
+python-dotenv
 requests
 Whoosh
 mimeparse

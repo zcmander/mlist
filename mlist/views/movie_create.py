@@ -1,5 +1,7 @@
 import json
+import requests
 
+from django.conf import settings
 from django.urls import reverse
 from django.views.generic import FormView
 from django.contrib import messages
@@ -130,3 +132,15 @@ def ajax_taglist_view(request):
     for tag in MovieInCollection.tags.all():
         tags.append(str(tag))
     return HttpResponse(json.dumps(tags), content_type="application/json")
+
+
+@login_required()
+def ajax_movie_list(request):
+    response = requests.get(
+        'http://www.omdbapi.com/',
+        params={
+            's': request.GET['s'],
+            'apikey': settings.OMDB_APIKEY
+        })
+
+    return HttpResponse(response.text, content_type="application/json")

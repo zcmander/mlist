@@ -46,7 +46,7 @@ var mlist = {
 
     movie_title_typeahead: function (term, typeahead) {
         var searchData = null;
-        $.getJSON("http://www.omdbapi.com/?callback=?&s=" + term + "&apikey=da2a56d7",
+        $.getJSON("ajax/movies?s=" + term,
             function(data) {
                 var result = [];
                 var movie;
