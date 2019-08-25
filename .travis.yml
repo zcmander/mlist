@@ -1,10 +1,14 @@
-language: python
-python:
-  - "3.6"
-install:
-  - pip install tox
-  - pip install -e .
-script: tox
-after_success: coveralls
-deploy:
-  provider: azure_web_apps
+matrix:
+  include:
+    - language: python
+      python:
+        - "3.6"
+      install:
+        - pip install tox
+        - pip install -e .
+      script: tox
+      after_success: coveralls
+    - language: node_js
+      node_js:
+        - 10
+      script: npm run build
