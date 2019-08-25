@@ -1,3 +1,5 @@
+import logging
+
 from django.db import models
 from django.contrib import admin
 from django.contrib.auth.models import User
@@ -7,12 +9,12 @@ from taggit.managers import TaggableManager
 
 from mlist.omdbapi import BackendOMDB
 
-from .tmdb import configure, Core, Movies, config
+import tmdbsimple as tmdb
 
-configure(settings.TMDB_APIKEY)
+tmdb.API_KEY = settings.TMDB_APIKEY
+TMDB_CONFIG = tmdb.Configuration().info()
 
-core = Core()
-core.update_configuration()
+logger = logging.getLogger(__name__)
 
 
 class IMDBMovie(models.Model):
@@ -89,83 +91,98 @@ class TMDBMovie(models.Model):
     def create(cls, title, imdb_id=None):
         self = cls()
 
-        tmdb_movies = Movies(title=title, limit=True)
+        tmdb_movies = tmdb.Search().movie(query=title)
         tmdb_movie = None
 
-        if tmdb_movies.get_total_results() > 0:
+        if len(tmdb_movies["results"]) > 0:
             if imdb_id:
-                for movie in tmdb_movies:
-                    print(movie.get_imdb_id(), imdb_id)
-                    if movie.get_imdb_id() == imdb_id:
+                for result in tmdb_movies["results"]:
+                    movie = tmdb.Movies(result["id"])
+                    result_imdb_id = movie.external_ids()["imdb_id"]
+
+                    if result_imdb_id == imdb_id:
                         tmdb_movie = movie
+                        break
+                else:
+                    logger.error("No TMDB movie found with title {0} and IMDB Id: {1}".format(
+                        title,
+                        imdb_id
+                    ))
             else:
-                tmdb_movie = iter(tmdb_movies).next()
+                tmdb_movie = iter(tmdb_movies["results"]).next()
 
             if not tmdb_movie:
                 raise Exception("Movie not found! (TMDB)")
 
+            info = tmdb_movie.info()
+
             spoken_language_names = [
-                x['name'] for x in tmdb_movie.get_spoken_languages()
+                x['name'] for x in info["spoken_languages"]
             ]
 
             production_company_names = [
-                x['name'] for x in tmdb_movie.get_production_companies()
+                x['name'] for x in info["production_companies"]
             ]
 
             productions_country_names = [
-                x['name'] for x in tmdb_movie.get_productions_countries()
+                x['name'] for x in info["production_countries"]
             ]
 
             genre_names = [
-                x['name'] for x in tmdb_movie.get_genres()
+                x['name'] for x in info["genres"]
             ]
 
-            self.imdb_id = tmdb_movie.get_imdb_id()
-            self.tmdb_id = tmdb_movie.get_id()
-            self.original_title = tmdb_movie.get_original_title()
-            self.title = tmdb_movie.get_title()
-            self.popularity = tmdb_movie.get_popularity()
-            self.adult = tmdb_movie.is_adult()
+            self.imdb_id = info["imdb_id"]
+            self.tmdb_id = info["id"]
+            self.original_title = info["original_title"]
+            self.title = info["title"]
+            self.popularity = info["popularity"]
+            self.adult = info["adult"]
             self.spoken_languages = ','.join(spoken_language_names)
-            self.homepage = tmdb_movie.get_homepage()
-            self.overview = tmdb_movie.get_overview()
-            self.vote_average = tmdb_movie.get_vote_average()
-            self.vote_count = tmdb_movie.get_vote_count()
-            self.runtime = tmdb_movie.get_runtime()
-            self.budget = tmdb_movie.get_budget()
-            self.revenue = tmdb_movie.get_revenue()
+            self.homepage = info["homepage"]
+            self.overview = info["overview"]
+            self.vote_average = info["vote_average"]
+            self.vote_count = info["vote_count"]
+            self.runtime = info["runtime"]
+            self.budget = info["budget"]
+            self.revenue = info["revenue"]
             self.genres = ','.join(genre_names)
             self.production_companies = ','.join(production_company_names)
             self.productions_countries = ','.join(productions_country_names)
-            self.poster_path = tmdb_movie.get_poster_path()
-            self.backdrop_path = tmdb_movie.get_backdrop_path()
-            self.tagline = tmdb_movie.get_tagline()
+            self.poster_path = info["poster_path"]
+            self.backdrop_path = info["backdrop_path"]
+            self.tagline = info["tagline"]
+
+        else:
+            logger.error("No TMDB movies found for search {0}".format(title))
 
         return self
 
+    def get_poster_url(self, size):
+        base_url = TMDB_CONFIG["images"]["secure_base_url"]
+        assert size in TMDB_CONFIG["images"]["poster_sizes"]
+        return base_url + size + self.poster_path
+
+    def get_backdrop_url(self, size):
+        base_url = TMDB_CONFIG["images"]["secure_base_url"]
+        assert size in TMDB_CONFIG["images"]["backdrop_sizes"]
+        return base_url + size + self.backdrop_path
+
     @property
     def thumbnail_poster_url(self):
-        return config.get('api', {}).get('base.url') + \
-               core.poster_sizes('m') + \
-               self.poster_path
+        return self.get_poster_url("w185")
 
     @property
     def large_poster_url(self):
-        return config.get('api', {}).get('base.url') + \
-               core.poster_sizes('l') + \
-               self.poster_path
+        return self.get_poster_url("w500")
 
     @property
     def backdrop_url(self):
-        return config.get('api', {}).get('base.url') + \
-               core.backdrop_sizes('s') + \
-               self.backdrop_path
+        return self.get_backdrop_url('w780')
 
     @property
     def backdrop_orginal_url(self):
-        return config.get('api', {}).get('base.url') + \
-               core.backdrop_sizes('o') + \
-               self.backdrop_path
+        return self.get_backdrop_url('original')
 
     def __str__(self):
         return u"{0} [{1}]".format(self.title, self.imdb_id)
