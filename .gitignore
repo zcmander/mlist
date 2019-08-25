@@ -169,4 +169,5 @@ htmlcov/
 mlistsite/whoosh_index/
 node_modules/
 .vscode/
-static/bundle.js
+
+static/*
