@@ -184,17 +184,11 @@ class Movie(models.Model):
 
     @property
     def has_imdb(self):
-        try:
-            return IMDBMovie.objects.filter(imdb_id=self.imdb_id).get()
-        except IMDBMovie.DoesNotFound:
-            return False
-
+        return IMDBMovie.objects.filter(imdb_id=self.imdb_id).first()
+        
     @property
     def has_tmdb(self):
-        try:
-            return TMDBMovie.objects.filter(imdb_id=self.imdb_id).get()
-        except TMDBMovie.DoesNotFound:
-            return False
+        return TMDBMovie.objects.filter(imdb_id=self.imdb_id).first()
 
     @property
     def thumbnail(self):

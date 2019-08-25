@@ -128,6 +128,5 @@ class MovieCreate(FormView):
 def ajax_taglist_view(request):
     tags = []
     for tag in MovieInCollection.tags.all():
-        tags.append({'tag': str(tag)})
-    content = {'tags': tags}
-    return HttpResponse(json.dumps(content), content_type="application/json")
+        tags.append(str(tag))
+    return HttpResponse(json.dumps(tags), content_type="application/json")

@@ -13,74 +13,73 @@
     </div>
   </div>
 
-    <ul class="thumbnails js-results" style="display:none">
-      <li class="col-6">
+    <div class="thumbnails js-results row" style="display:none">
+      <div class="col-md-6">
         <div class="thumbnail">
-          <div id="chart-media-distribution"></div>
-          <div class="caption">
-            <h4>Tag distribution</h4>
-          </div>
+            <div class="caption">
+              <h4>Tag distribution</h4>
+            </div>
+          <div id="chart-media-distribution" class="chart chart-pie"></div>
         </div>
-      </li>
-      <li class="col-6">
+      </div>
+      <div class="col-md-6">
         <div class="thumbnail">
-          <div id="chart-genre-distribution"></div>
-          <div class="caption">
-            <h4>Genre distribution</h4>
-          </div>
+            <div class="caption">
+                <h4>Genre distribution</h4>
+            </div>
+          <div id="chart-genre-distribution" class="chart chart-pie"></div>
         </div>
-      </li>
-      <li class="col-12">
+      </div>
+      <div class="col-12">
         <div class="thumbnail">
-          <div id="chart-watched-movies"></div>
           <div class="caption">
             <h4>Watched movies</h4>
             Samples per:
             <div class="btn-group samplechooser">
-                <button class="btn">Year</button>
-                <button class="btn active">Month</button>
-                <button class="btn">Week</button>
+                <button class="btn btn-secondary">Year</button>
+                <button class="btn btn-secondary active">Month</button>
+                <button class="btn btn-secondary">Week</button>
             </div>
           </div>
+          <div id="chart-watched-movies" class="chart"></div>
         </div>
-      </li>
-      <li class="col-12">
+      </div>
+      <div class="col-12">
         <div class="thumbnail">
-          <div id="chart-media-historical-distribution"></div>
           <div class="caption">
             <h4>Historical distribution</h4>
 
             Samples per:
             <div class="btn-group samplechooser">
-                <button class="btn">Year</button>
-                <button class="btn active">Month</button>
-                <button class="btn">Week</button>
+                <button class="btn btn-secondary">Year</button>
+                <button class="btn btn-secondary active">Month</button>
+                <button class="btn btn-secondary">Week</button>
             </div>
           </div>
+          <div id="chart-media-historical-distribution" class="chart"></div>
         </div>
-      </li>
+      </div>
 
-      <li class="col-12">
+      <div class="col-12">
         <div class="thumbnail">
-          <div id="chart-watchdate-vs-movieyear"></div>
           <div class="caption">
             <h4>Watch date vs. movie release date</h4>
           </div>
+          <div id="chart-watchdate-vs-movieyear" class="chart"></div>
         </div>
-      </li>
-    </ul>
+      </div>
+    </div>
 {% endblock %}
 
 {% block script %}
-    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
-      google.load("visualization", "1", {packages:["corechart", "table"]});
+      google.load("visualization", "1", {packages:["corechart"]});
     </script>
-    <script type="text/javascript" src="{% static "js/jquery.csv-0.71.min.js" %}"></script>
-    <script type="text/javascript" src="{% static "js/mlist-plot.js" %}"></script>
     <script type="text/javascript">
     $(function() {
-      mlist.statistics.init();
+
+      google.charts.setOnLoadCallback(mlist.statistics.init);
     });
     </script>
 {% endblock %}

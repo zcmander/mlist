@@ -92,7 +92,6 @@ STATICFILES_DIRS = (
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
-    'sass_processor.finders.CssFinder',
     # 'django.contrib.staticfiles.finders.DefaultStorageFinder',
 )
 
@@ -132,18 +131,11 @@ INSTALLED_APPS = (
     'crispy_forms',
     'haystack',
     'debug_toolbar',
-    'sass_processor'
 )
 
 USE_THOUSAND_SEPARATOR = False
 
 INTERNAL_IPS = ('127.0.0.1',)
-
-SASS_PROCESSOR_INCLUDE_DIRS = [
-    os.path.join(BASE_DIR, 'node_modules'),
-]
-
-SASS_PRECISION = 8
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 

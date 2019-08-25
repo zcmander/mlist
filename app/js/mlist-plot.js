@@ -18,6 +18,8 @@ mlist.statistics = (function() {
     var sampled_per_month = null;
     var sampled_per_week = null;
 
+    var exported_data = null;
+
     return {
 
     parse_csv_value: function (value, state) {
@@ -120,7 +122,7 @@ mlist.statistics = (function() {
     },
 
     create_datatable_for_watched_movies: function(samplelist) {
-        var temp = new Array();
+        var temp = [];
         for (var group in samplelist) {
             temp.push([group, samplelist[group].length, samplelist[group]]);
         }
@@ -128,6 +130,7 @@ mlist.statistics = (function() {
         var result = new google.visualization.DataTable();
         result.addColumn('date', 'Watch date');
         result.addColumn('number', 'Count');
+
         result.addRows(temp.length);
 
         for (var i in temp) {
@@ -139,9 +142,11 @@ mlist.statistics = (function() {
 
     draw_watched_movies: function(sampledict) {
         var options = {
-            width:"930",
             height:"300",
             curveType: "function",
+            chartArea: {
+                width: '100%'
+            },
             legend: {
                 position: "none"
             },
@@ -153,9 +158,8 @@ mlist.statistics = (function() {
             },
             hAxis: {
                 maxAlternation: 100,
-                minValue: 0,
                 direction: 1
-            }
+            },
         };
         var samplechooser = $("#chart-watched-movies").parent().find(".samplechooser");
         var samples = sampledict[samplechooser.find("button.active").html().toLowerCase()];
@@ -166,9 +170,11 @@ mlist.statistics = (function() {
 
     draw_historical_media_distribution: function(sampledict) {
         var options = {
-            width:"930",
             height:"300",
             curveType: "function",
+            chartArea: {
+                width: '100%'
+            },
             legend: {
                 position: "none"
             },
@@ -180,7 +186,6 @@ mlist.statistics = (function() {
             },
             hAxis: {
                 maxAlternation: 100,
-                minValue: 0,
                 direction: 1
             }
         };
@@ -193,8 +198,9 @@ mlist.statistics = (function() {
 
     draw_media_distribution: function(data) {
         var options = {
-            width:"450",
-            height:"450",
+            chartArea: {
+                width: '100%'
+            },
             legend: {
                 position: "none"
             },
@@ -208,17 +214,22 @@ mlist.statistics = (function() {
 
     draw_genre_distribution: function(data) {
         var options = {
-            width:"450",
-            height:"450",
+            chartArea: {
+                width: '100%'
+            },
             legend: {
                 position: "none"
-            },
+            }
         };
 
         var genre_count = {
         };
 
         data.forEach(function(mic, index) {
+            if (mic.movie.imdb == null) {
+                return;
+            }
+
             mic.movie.imdb.genres.forEach(function(genre) {
                 if (genre in genre_count) {
                     genre_count[genre] += 1;
@@ -246,10 +257,6 @@ mlist.statistics = (function() {
             return  "<b>" + mic.movie.title + "</b>" + "<br />Watched: " + new Date(mic.date).toLocaleDateString() + "<br />Release: " + new Date(mic.movie.imdb.released).toLocaleDateString()
         }
 
-        var gviz_table = [
-            ['Watch year', 'Movie year'],
-        ];
-
         var gdata = new google.visualization.DataTable();
         gdata.addColumn('date', 'Movie date');
         gdata.addColumn('date', 'Watch date');
@@ -260,14 +267,19 @@ mlist.statistics = (function() {
         var mic_index = null
         for (mic_index in data) {
             var mic = data[mic_index];
+            if (mic.movie.imdb == null) {
+                continue;
+            }
             gdata.setValue(parseInt(mic_index), 0, new Date(mic.date));
             gdata.setValue(parseInt(mic_index), 1, new Date(mic.movie.imdb.released));
             gdata.setValue(parseInt(mic_index), 2, get_tooltip(mic));
         }
 
         var options = {
+            chartArea: {
+                width: '100%'
+            },
             legend: 'none',
-            width:"930",
             height:"300",
             tooltip: {isHtml: true},
         };
@@ -278,28 +290,35 @@ mlist.statistics = (function() {
         chart.draw(gdata, options);
     },
 
+    draw: function() {
+        $(".js-results").fadeIn();
+
+        var data = exported_data;
+
+        medialist = new Array();
+        for (var i in data) {
+            var media = data[i].tags[0];
+            if ($.inArray(media, medialist) == -1) {
+                medialist.push(media);
+            }
+        }
+
+        mlist.statistics.draw_media_distribution(data);
+        mlist.statistics.draw_genre_distribution(data);
+        mlist.statistics.draw_watchdate_vs_releasedate(data);
+
+        mlist.statistics.create_sampled_datasets(data);
+        mlist.statistics.updateView(data);
+    },
 
     stats_show: function (e) {
+        $(".js-loading").show();
         $.ajax({
             url: mlist.settings.urls.adv_export_movies,
             success: function(data) {
-                medialist = new Array();
-                for (var i in data) {
-                    var media = data[i].tags[0];
-                    if ($.inArray(media, medialist) == -1) {
-                        medialist.push(media);
-                    }
-                }
-
-                mlist.statistics.draw_media_distribution(data);
-                mlist.statistics.draw_genre_distribution(data);
-                mlist.statistics.draw_watchdate_vs_releasedate(data);
-
-                mlist.statistics.create_sampled_datasets(data);
-                mlist.statistics.updateView(data);
-
+                exported_data = data;
                 $(".js-loading").hide();
-                $(".js-results").fadeIn();
+                mlist.statistics.draw();
             }
         });
     },
@@ -323,6 +342,11 @@ mlist.statistics = (function() {
         });
 
         mlist.statistics.stats_show();
+
+        $(window).resize(function(){
+            mlist.statistics.updateView();
+            mlist.statistics.draw();
+        });  
     }
 };
 

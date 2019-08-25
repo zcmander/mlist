@@ -19,15 +19,9 @@ class MovieDetail(DetailView):
         context['watchedmics'] = qs.filter(collection__title="watched").all()
         context['collections'] = qs.exclude(collection__title="watched").all()
 
-        try:
-            context['imdb'] = IMDBMovie.objects \
-                .filter(imdb_id=self.object.movie.imdb_id)[:1].get()
-        except IMDBMovie.DoesNotExist:
-            context['imdb'] = None
+        context['imdb'] = IMDBMovie.objects \
+            .filter(imdb_id=self.object.movie.imdb_id).first()
 
-        try:
-            context['tmdb'] = TMDBMovie.objects \
-                .filter(imdb_id=self.object.movie.imdb_id)[:1].get()
-        except TMDBMovie.DoesNotExist:
-            context['tmdb'] = None
+        context['tmdb'] = TMDBMovie.objects \
+            .filter(imdb_id=self.object.movie.imdb_id).first()
         return context

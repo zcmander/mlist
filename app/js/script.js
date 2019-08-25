@@ -44,22 +44,22 @@ var ajaxManager = (function() {
 var mlist = {
     settings: {},
 
-    movie_title_typeahead: function (typeahead, term) {
+    movie_title_typeahead: function (term, typeahead) {
         var searchData = null;
-        $.getJSON("http://www.omdbapi.com/?callback=?&s=" + term,
+        $.getJSON("http://www.omdbapi.com/?callback=?&s=" + term + "&apikey=da2a56d7",
             function(data) {
                 var result = [];
                 var movie;
                 for (i in data.Search) {
                     var movie = data.Search[i];
                     result.push({
-                        'value':movie.Title + " (" + movie.Year + ")",
+                        'name':movie.Title + " (" + movie.Year + ")",
                         'imdb_id': movie.imdbID,
                         'year': movie.Year,
                         'title': movie.Title
                     });
                 }
-                typeahead.process(result);
+                typeahead(result);
                 console.log(result)
             }
         );
@@ -107,7 +107,7 @@ var mlist = {
 
         $('.movie-title-typeahead').typeahead({
             source: mlist.movie_title_typeahead,
-            onselect: function(obj) {
+            afterSelect: function(obj) {
                 $('.movie-title-typeahead').val(obj['title']);
                 $('.movie-imdb_id-typeahead').val(obj['imdb_id']);
             }
@@ -118,16 +118,20 @@ var mlist = {
         $(".handle-queries").click(mlist.handle_batch);
 
         if ($(".tagManager").length != 0) {
-            $(".tagManager").tagsManager({
-                prefilled: $(".tagManager").val(),
-                typeahead: true,
-                typeaheadAjaxSource: mlist.settings.urls.tag_list,
-                hiddenTagListName: 'tags'
+            $.get(mlist.settings.urls.tag_list).then((data) => {
+                var input = $(".tagManager");
+                input.tagsinput({
+                    trimValue: true,
+                    typeahead: {
+                        source: data,
+                    },
+                });
+                $(".bootstrap-tagsinput").find('input').addClass("form-control");
+                input.on('itemAdded', function() {
+                    $(".bootstrap-tagsinput").find('input').val('');
+                  });
             });
         }
-
-        // Send Request
-        /**/
     },
 
     /* This 'hack' loads first image and then displays it as body's background image */
@@ -140,3 +144,5 @@ var mlist = {
         img.attr('src', settings.url);
     },
 };
+
+window.mlist = mlist;
