@@ -1,8 +1,6 @@
 import json
 from datetime import datetime
 
-from django.conf import settings
-
 from urllib.request import urlopen
 from urllib.parse import quote
 
@@ -12,7 +10,7 @@ class BackendOMDB:
     Backend for Internet Movie Database, using OMDB Api
     """
 
-    APIKEY = settings.OMDB_APIKEY
+    APIKEY = None
 
     __base_url = "http://www.omdbapi.com/"
 

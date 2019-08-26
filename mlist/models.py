@@ -3,16 +3,17 @@ import logging
 from django.db import models
 from django.contrib import admin
 from django.contrib.auth.models import User
-from django.conf import settings
 
 from taggit.managers import TaggableManager
+import tmdbsimple as tmdb
 
 from mlist.omdbapi import BackendOMDB
 
-import tmdbsimple as tmdb
+from mlist.apps import MListAppConfig
 
-tmdb.API_KEY = settings.TMDB_APIKEY
-TMDB_CONFIG = tmdb.Configuration().info()
+from django.apps import apps
+
+app_config = apps.get_app_config(MListAppConfig.name)
 
 logger = logging.getLogger(__name__)
 
@@ -159,11 +160,15 @@ class TMDBMovie(models.Model):
         return self
 
     def get_poster_url(self, size):
+        TMDB_CONFIG = app_config.TMDB_CONFIG
+
         base_url = TMDB_CONFIG["images"]["secure_base_url"]
         assert size in TMDB_CONFIG["images"]["poster_sizes"]
         return base_url + size + self.poster_path
 
     def get_backdrop_url(self, size):
+        TMDB_CONFIG = app_config.TMDB_CONFIG
+
         base_url = TMDB_CONFIG["images"]["secure_base_url"]
         assert size in TMDB_CONFIG["images"]["backdrop_sizes"]
         return base_url + size + self.backdrop_path
