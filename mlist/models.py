@@ -5,9 +5,6 @@ from django.contrib import admin
 from django.contrib.auth.models import User
 
 from taggit.managers import TaggableManager
-import tmdbsimple as tmdb
-
-from mlist.omdbapi import BackendOMDB
 
 from mlist.apps import MListAppConfig
 
@@ -36,27 +33,6 @@ class IMDBMovie(models.Model):
     poster_url = models.CharField(max_length=255, null=True)
 
     update_date = models.DateTimeField(auto_now=True)
-
-    @classmethod
-    def create(cls, title=None, imdb_id=None):
-        self = cls()
-        if title or imdb_id:
-            result = BackendOMDB().get_data(title, imdb_id)
-            self.imdb_id = result.get('imdb_id')
-            self.title = result.get('title')
-            self.year = result.get('year')[:4]
-            self.rated = result.get('rated')
-            self.released = result.get('released')
-            self.runtime = result.get('runtime')
-            self.director = result.get('director')
-            self.writer = result.get('writer')
-            self.actors = result.get('actors')
-            self.plot = result.get('plot')
-            self.votes = result.get('votes')
-            self.rating = result.get('rating')
-            self.genre = result.get('genre')
-            self.poster_url = result.get('poster_url')
-        return self
 
     def __str__(self):
         return u"{0} [{1}]".format(self.title, self.imdb_id)
@@ -87,77 +63,6 @@ class TMDBMovie(models.Model):
     tagline = models.TextField(null=False)
 
     update_date = models.DateTimeField(auto_now=True)
-
-    @classmethod
-    def create(cls, title, imdb_id=None):
-        self = cls()
-
-        tmdb_movies = tmdb.Search().movie(query=title)
-        tmdb_movie = None
-
-        if len(tmdb_movies["results"]) > 0:
-            if imdb_id:
-                for result in tmdb_movies["results"]:
-                    movie = tmdb.Movies(result["id"])
-                    result_imdb_id = movie.external_ids()["imdb_id"]
-
-                    if result_imdb_id == imdb_id:
-                        tmdb_movie = movie
-                        break
-                else:
-                    logger.error("No TMDB movie found with title {0} and IMDB Id: {1}".format(
-                        title,
-                        imdb_id
-                    ))
-            else:
-                tmdb_movie = iter(tmdb_movies["results"]).next()
-
-            if not tmdb_movie:
-                raise Exception("Movie not found! (TMDB)")
-
-            info = tmdb_movie.info()
-
-            spoken_language_names = [
-                x['name'] for x in info["spoken_languages"]
-            ]
-
-            production_company_names = [
-                x['name'] for x in info["production_companies"]
-            ]
-
-            productions_country_names = [
-                x['name'] for x in info["production_countries"]
-            ]
-
-            genre_names = [
-                x['name'] for x in info["genres"]
-            ]
-
-            self.imdb_id = info["imdb_id"]
-            self.tmdb_id = info["id"]
-            self.original_title = info["original_title"]
-            self.title = info["title"]
-            self.popularity = info["popularity"]
-            self.adult = info["adult"]
-            self.spoken_languages = ','.join(spoken_language_names)
-            self.homepage = info["homepage"]
-            self.overview = info["overview"]
-            self.vote_average = info["vote_average"]
-            self.vote_count = info["vote_count"]
-            self.runtime = info["runtime"]
-            self.budget = info["budget"]
-            self.revenue = info["revenue"]
-            self.genres = ','.join(genre_names)
-            self.production_companies = ','.join(production_company_names)
-            self.productions_countries = ','.join(productions_country_names)
-            self.poster_path = info["poster_path"]
-            self.backdrop_path = info["backdrop_path"]
-            self.tagline = info["tagline"]
-
-        else:
-            logger.error("No TMDB movies found for search {0}".format(title))
-
-        return self
 
     def get_poster_url(self, size):
         TMDB_CONFIG = app_config.TMDB_CONFIG

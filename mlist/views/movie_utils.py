@@ -4,21 +4,32 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect
 
-from mlist.models import Movie, IMDBMovie, TMDBMovie
+from mlist.models import Movie
+from mlist.resolver import resolve_imdb_id_by_title
+from mlist.backend import fetch_imdb_info, fetch_tmdb_info
 
 
 @login_required()
 def fetch_imdb_view(request, pk):
     movie = Movie.objects.get(pk=int(pk))
-    imdb_movie = IMDBMovie.create(title=movie.title, imdb_id=movie.imdb_id)
-    if not IMDBMovie.objects.filter(imdb_id=imdb_movie.imdb_id).all():
-        imdb_movie.save()
-        if not movie.imdb_id:  # If movie without IMDB ID then update it
-            movie.imdb_id = imdb_movie.imdb_id
-            movie.save()
-    elif not movie.imdb_id:  # If movie without IMDB ID then update it
-        movie.imdb_id = imdb_movie.imdb_id
-        movie.save()
+
+    # Resolve IMDB ID if possible
+    if not movie.imdb_id:
+        imdb_id = resolve_imdb_id_by_title(movie.get_title())
+        if imdb_id:
+            movie.imdb_id = imdb_id
+
+    movie.save()
+
+    # Fetch IMDB Info
+    try:
+        fetch_imdb_info(movie)
+    except Exception as exc:
+        messages.error(
+            request,
+            "<strong>Error while fetching IMDB information:</strong>" +
+            exc.__class__.__name__ + u":" + str(exc),
+            extra_tags='safe')
 
     messages.success(request, 'IMDB information fetched.')
     return redirect(reverse("list-movies"))
@@ -32,9 +43,14 @@ def fetch_tmdb_view(request, pk):
             request, 'TMDB information requires IMDB id before fetch.')
         return redirect(reverse("list-movies"))
 
-    tmdb_movie = TMDBMovie.create(title=movie.title, imdb_id=movie.imdb_id)
-    if not TMDBMovie.objects.filter(imdb_id=tmdb_movie.imdb_id).all():
-        tmdb_movie.save()
+    try:
+        fetch_tmdb_info(movie)
+    except Exception as exc:
+        messages.error(
+            request,
+            "<strong>Error while fetching TMDB information:</strong>" +
+            str(exc.__class__.__name__) + u":" + str(exc),
+            extra_tags='safe')
 
     messages.success(request, 'TMDB information fetched.')
     return redirect(reverse("list-movies"))
