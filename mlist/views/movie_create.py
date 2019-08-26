@@ -10,13 +10,13 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 from django.utils.decorators import method_decorator
 
+from mlist.resolver import resolve_imdb_id_by_title
+from mlist.backend import fetch_imdb_info, fetch_tmdb_info
 from mlist.forms import MovieForm
 from mlist.models import (
     Movie,
     MovieInCollection,
     Collection,
-    IMDBMovie,
-    TMDBMovie,
 )
 
 
@@ -57,62 +57,45 @@ class MovieCreate(FormView):
         collection = form.cleaned_data['collection']
 
         movie = None
-        imdb_movie = None
-        try:
-            if imdb_id:
-                movie = Movie.objects.get(imdb_id=imdb_id)
-            else:
-                movie = Movie.objects.get(title=title)
-        except Movie.DoesNotExist:
+
+        # First, check if database already has the movie with given IMDB ID
+        movie = Movie.objects.filter(imdb_id=imdb_id).first()
+
+        # If not, create a new one
+        if not movie:
             movie = Movie()
             movie.title = title
+            # User provided IMDB id is only used, if it has match in any backend
             movie.imdb_id = None
             movie.save()
 
-        if not movie or \
-           not movie.imdb_id or \
-           not IMDBMovie.objects.filter(imdb_id=movie.imdb_id).all():
+        # Resolve IMDB ID if possible
+        if not movie.imdb_id:
+            imdb_id = resolve_imdb_id_by_title(title)
+            if imdb_id:
+                movie.imdb_id = imdb_id
 
-            try:
-                if imdb_id:
-                    imdb_movie = IMDBMovie.create(imdb_id=imdb_id)
-                else:
-                    imdb_movie = IMDBMovie.create(title=title)
-            except Exception as exc:
-                messages.error(
-                    self.request,
-                    "<strong>Error while fetching IMDB information:</strong>" +
-                    exc.__class__.__name__ + u":" + str(exc),
-                    extra_tags='safe')
+        # Fetch IMDB Info
+        try:
+            fetch_imdb_info(movie)
+        except Exception as exc:
+            messages.error(
+                self.request,
+                "<strong>Error while fetching IMDB information:</strong>" +
+                exc.__class__.__name__ + u":" + str(exc),
+                extra_tags='safe')
 
-            if imdb_movie and imdb_movie.imdb_id:
-                try:
-                    movie = Movie.objects.get(imdb_id=imdb_movie.imdb_id)
-                except Movie.DoesNotExist:
-                    pass
+        # Fetch TMDB Info
+        try:
+            fetch_tmdb_info(movie)
+        except Exception as exc:
+            messages.error(
+                self.request,
+                "<strong>Error while fetching TMDB information:</strong>" +
+                str(exc.__class__.__name__) + u":" + str(exc),
+                extra_tags='safe')
 
-            if imdb_movie and \
-               not IMDBMovie.objects.filter(imdb_id=imdb_movie.imdb_id).all():
-                imdb_movie.save()
-
-                # If movie without IMDB ID then update it
-                if movie and not movie.imdb_id:
-                    movie.imdb_id = imdb_movie.imdb_id
-                    movie.save()
-
-        if movie.imdb_id and \
-           not TMDBMovie.objects.filter(imdb_id=movie.imdb_id).all():
-            try:
-                tmdb_movie = TMDBMovie.create(
-                    movie.get_title(),
-                    imdb_id=movie.imdb_id)
-                tmdb_movie.save()
-            except Exception as exc:
-                messages.error(
-                    self.request,
-                    "<strong>Error while fetching TMDB information:</strong>" +
-                    str(exc.__class__.__name__) + u":" + str(exc),
-                    extra_tags='safe')
+        movie.save()
 
         mic = MovieInCollection()
         mic.movie = movie
