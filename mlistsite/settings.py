@@ -17,7 +17,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': 'MList.db',
+        'NAME': 'MList.sqlite',
         'USER': '',
         'PASSWORD': '',
         'HOST': '',

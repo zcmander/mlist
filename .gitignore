@@ -172,3 +172,4 @@ node_modules/
 
 static/*
 .env
+MList.sqlite
