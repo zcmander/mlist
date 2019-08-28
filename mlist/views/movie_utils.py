@@ -21,7 +21,6 @@ def fetch_imdb_view(request, pk):
 
     movie.save()
 
-    # Fetch IMDB Info
     try:
         fetch_imdb_info(movie)
     except Exception as exc:
@@ -30,8 +29,9 @@ def fetch_imdb_view(request, pk):
             "<strong>Error while fetching IMDB information:</strong>" +
             exc.__class__.__name__ + u":" + str(exc),
             extra_tags='safe')
+    else:
+        messages.success(request, 'IMDB information fetched.')
 
-    messages.success(request, 'IMDB information fetched.')
     return redirect(reverse("list-movies"))
 
 
@@ -51,6 +51,7 @@ def fetch_tmdb_view(request, pk):
             "<strong>Error while fetching TMDB information:</strong>" +
             str(exc.__class__.__name__) + u":" + str(exc),
             extra_tags='safe')
+    else:
+        messages.success(request, 'TMDB information fetched.')
 
-    messages.success(request, 'TMDB information fetched.')
     return redirect(reverse("list-movies"))

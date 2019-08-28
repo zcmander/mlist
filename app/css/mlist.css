@@ -72,7 +72,7 @@ body {
 
 .movie-title .tagline {
     background: black;
-    padding: 3px;   
+    padding: 3px;
     opacity: 0.8;
 
     line-height: 1em;
@@ -106,7 +106,9 @@ body {
     background-color: white;
 }
 
-.side-actions {
+/* When user action are mounted below movie cover,
+ * then it should be a bit intended */
+.movei-cover .side-actions {
     margin-left: 10px;
     margin-right: 10px;
 }
