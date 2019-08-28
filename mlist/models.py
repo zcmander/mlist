@@ -1,14 +1,13 @@
 import logging
 
+from django.apps import apps
 from django.db import models
-from django.contrib import admin
 from django.contrib.auth.models import User
+from model_utils.managers import InheritanceManager
 
 from taggit.managers import TaggableManager
 
 from mlist.apps import MListAppConfig
-
-from django.apps import apps
 
 app_config = apps.get_app_config(MListAppConfig.name)
 
@@ -167,5 +166,77 @@ class MovieInCollection(models.Model):
             self.movie.title)
 
 
-admin.site.register(TMDBMovie)
-admin.site.register(IMDBMovie)
+class BackendMovie(models.Model):
+    """
+    Represent a movie in a external system.
+    """
+    movie = models.ForeignKey(
+        Movie,
+        on_delete=models.CASCADE,
+        related_name="backend_movie")
+
+    # Backend idenfitier
+    backend = models.CharField(max_length=100, null=False)
+
+    fetched = models.DateTimeField(null=False, auto_now=True)
+
+    def add_int(self, key, value):
+        BackendMovieIntAttribute(backend_movie=self, key=key, value=value).save(force_insert=True)
+
+    def add_string(self, key, value):
+        BackendMovieStringAttribute(backend_movie=self, key=key, value=value).save(force_insert=True)
+
+    def add_date(self, key, value):
+        BackendMovieDateAttribute(backend_movie=self, key=key, value=value).save(force_insert=True)
+
+    def add_datetime(self, key, value):
+        BackendMovieDateTimeAttribute(backend_movie=self, key=key, value=value).save(force_insert=True)
+
+    def add_float(self, key, value):
+        BackendMovieFloatAttribute(backend_movie=self, key=key, value=value).save(force_insert=True)
+
+    def add_json(self, key, value):
+        BackendMovieJSONAttribute(backend_movie=self, key=key, value=value).save(force_insert=True)
+
+
+class BackendMovieAttribute(models.Model):
+    """
+    A single pice of infomation of the backend movie.
+    """
+    backend_movie = models.ForeignKey(
+        BackendMovie,
+        on_delete=models.CASCADE,
+        related_name='attributes')
+
+    key = models.CharField(max_length=200)
+
+    objects = InheritanceManager()
+
+    class Meta:
+        unique_together = (('backend_movie', 'key'),)
+
+
+class BackendMovieIntAttribute(BackendMovieAttribute):
+    value = models.IntegerField(blank=False, null=False)
+    unit = models.CharField(max_length=200)
+
+
+class BackendMovieFloatAttribute(BackendMovieAttribute):
+    value = models.FloatField(blank=False, null=False)
+    unit = models.CharField(max_length=200)
+
+
+class BackendMovieStringAttribute(BackendMovieAttribute):
+    value = models.TextField(blank=False, null=False)
+
+
+class BackendMovieDateAttribute(BackendMovieAttribute):
+    value = models.DateField(blank=False, null=False)
+
+
+class BackendMovieDateTimeAttribute(BackendMovieAttribute):
+    value = models.DateTimeField(blank=False, null=False)
+
+
+class BackendMovieJSONAttribute(BackendMovieAttribute):
+    value = models.TextField(blank=False, null=False)

@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import MovieInCollection, Collection, Movie
+from .models import MovieInCollection, Collection, Movie, BackendMovie, BackendMovieAttribute, TMDBMovie, IMDBMovie
 
 
 class CollectionAdmin(admin.ModelAdmin):
@@ -33,3 +33,9 @@ class MovieAdmin(admin.ModelAdmin):
 admin.site.register(MovieInCollection, MovieInCollectionAdmin)
 admin.site.register(Collection, CollectionAdmin)
 admin.site.register(Movie, MovieAdmin)
+admin.site.register(TMDBMovie)
+admin.site.register(IMDBMovie)
+
+
+admin.site.register(BackendMovie)
+admin.site.register(BackendMovieAttribute)

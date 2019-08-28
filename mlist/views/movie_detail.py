@@ -2,7 +2,7 @@ from django.views.generic import DetailView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
-from mlist.models import MovieInCollection, IMDBMovie, TMDBMovie
+from mlist.models import MovieInCollection, IMDBMovie, TMDBMovie, BackendMovieAttribute
 
 
 @method_decorator(login_required, name='dispatch')
@@ -24,4 +24,13 @@ class MovieDetail(DetailView):
 
         context['tmdb'] = TMDBMovie.objects \
             .filter(imdb_id=self.object.movie.imdb_id).first()
+
+        attributes = BackendMovieAttribute.objects \
+            .filter(backend_movie__movie=self.object.movie).select_subclasses().all()
+
+        # Convert to dict
+        context["attributes"] = {}
+        for attribute in attributes:
+            context["attributes"][attribute.key] = attribute.value
+
         return context

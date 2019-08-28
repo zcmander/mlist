@@ -1,6 +1,6 @@
 import logging
 
-from mlist.models import IMDBMovie, TMDBMovie
+from mlist.models import IMDBMovie, TMDBMovie, BackendMovie
 
 from mlist.omdbapi import BackendOMDB
 import tmdbsimple as tmdb
@@ -35,6 +35,26 @@ def fetch_imdb_info(movie):
     imdb_movie.genre = result.get('genre')
     imdb_movie.poster_url = result.get('poster_url')
     imdb_movie.save()
+
+    backend_movie = BackendMovie(movie=movie, backend="imdb")
+    backend_movie.save()
+
+    backend_movie.add_string("imdb_id", result.get('imdb_id'))
+    backend_movie.add_string("title", result.get('title'))
+    backend_movie.add_int("year", (int)(result.get('year')[:4]))
+    backend_movie.add_string("rated", result.get('rated'))
+    backend_movie.add_date("released", result.get('released'))
+    backend_movie.add_string("imdb.runtime", result.get('runtime'))
+    backend_movie.add_string("director", result.get('director'))
+    backend_movie.add_string("writer", result.get('writer'))
+    backend_movie.add_string("actors", result.get('actors'))
+    backend_movie.add_string("synopsis", result.get('plot'))
+    backend_movie.add_int("imdb.votes", result.get('votes'))
+    backend_movie.add_float("imdb.rating", result.get('rating'))
+    backend_movie.add_string("imdb.genre", result.get('genre'))
+    backend_movie.add_string("poster_url", result.get('poster_url'))
+
+    print("BACKEND_MOVIE SAVE!")
 
     return imdb_movie
 
