@@ -1,58 +1,10 @@
-{% load mlist_extras  %}
-{% load humanize %}
-
+{% if has_details %}
 <div class="movie-block">
 
     <h4>Details</h4>
-    
-    {% if imdb %}
-    <div class="row movie-details">
-        <div class="col-4 title">Director:</div>
-        <div class="col-8 body">{{imdb.director|default:"Unknown"}}</div>
-    </div>
 
-    <div class="row movie-details">
-        <div class="col-4 title">Writer:</div>
-        <div class="col-8 body">{% br_list imdb.writer|default:"Unknown" %}</div>
-    </div>
-
-    <div class="row movie-details">
-        <div class="col-4 title">Actors:</div>
-        <div class="col-8 body">{% br_list imdb.actors|default:"Unknown" %}</div>
-    </div>
-    {% endif %}
-
-    {% if tmdb %}
-    <div class="row movie-details">
-        <div class="col-4 title">Companies:</div>
-        <div class="col-8 body">{% br_list tmdb.production_companies|default:"Unknown" %}</div>
-    </div>
-
-    <div class="row movie-details">
-        <div class="col-4 title">Countries:</div>
-        <div class="col-8 body">{% br_list tmdb.productions_countries|default:"Unknown" %}</div>
-    </div>
-    {% endif %}
-
-    {% if tmdb %}
-    <div class="row movie-details">
-        <div class="col-4 title">Spoken languages:</div>
-        <div class="col-8 body">{% br_list tmdb.spoken_languages|default:"Unknown" %}</div>
-    </div>
-
-    <div class="row movie-details">
-        <div class="col-4 title">Homepage:</div>
-        <div class="col-8 body">{{tmdb.homepage|urlizetrunc:40|default:"Unknown"}}</div>
-    </div>
-
-    <div class="row movie-details">
-            <div class="col-4 title">Budget:</div>
-            <div class="col-8 body">{{tmdb.budget|intcomma|default:"Unknown"}}</div>
-    </div>
-    
-    <div class="row movie-details">
-        <div class="col-4 title">Revenue:</div>
-        <div class="col-8 body">{{tmdb.revenue|intcomma|default:"Unknown"}}</div>
-    </div>
-    {% endif %}
+    {% for title, value, type in details %}
+        {% include "mlist/includes/detail_movie_detail_row.html" with value=value title=title type=type %}
+    {% endfor %}
 </div>
+{% endif %}

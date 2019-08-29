@@ -16,7 +16,7 @@ mlist-movie-detail
 {% endif%}
 
 <div class="row">
-{% if tmdb %}
+{% if has_poster %}
     <div class="col-md-4 movie-cover">
         <div class="row">
             <div class="col-6 col-md-12">
@@ -32,35 +32,36 @@ mlist-movie-detail
     <div class="offset-2 col-8">
 {% endif %}
 
-<h1 class="page-header movie-title" title="{{mic.movie.title}}">
-    <span class="title">{{mic.movie.get_title}}</span>
+<h1 class="page-header movie-title">
+    <span class="title">{{attributes.title}}</span>
 
     <div>
-    {% if tmdb.tagline %}
-    <small class="tagline text-white">{{tmdb.tagline}}</small>
+    {% if attributes.tagline %}
+    <small class="tagline text-white">{{attributes.tagline}}</small>
     {% endif %}
 
-    &nbsp;<span class="badge badge-pill badge-secondary">{{imdb.rated}}</span>
+    {% if attributes.rated %}
+    &nbsp;<span class="badge badge-pill badge-secondary">{{attributes.rated}}</span>
+    {% endif %}
     </div>
 </h1>
 
 <div class="row">
 
-    {% if not tmdb %}
+    {% if not has_poster %}
         <div class="col-12">
             {% include "mlist/includes/detail_user_control.html" %}
         </div>
     {% endif %}
 
-    {% if imdb or tmdb %}
     <div class="col-lg-6">
         {% include "mlist/includes/detail_movie_overview.html" %}
     </div>
 
+
     <div class="col-lg-6">
         {% include "mlist/includes/detail_movie_details.html" %}
     </div>
-    {% endif %}
 
     <div class="col-12">
         {% if imdb or tmdb %}
@@ -70,6 +71,18 @@ mlist-movie-detail
     </div>
 </div>
 
+</div>
+
+<div class="col-12 bg-light">
+
+    <table class="table">
+        {% for key, value in debug %}
+            <tr>
+                <td>{{ key }}</td>
+                <td>{{ value }}</td>
+            </tr>
+        {% endfor %}
+    </table>
 </div>
 
 </div>
