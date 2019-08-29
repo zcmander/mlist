@@ -52,9 +52,7 @@ def fetch_imdb_info(movie):
     backend_movie.add_int("imdb.votes", result.get('votes'))
     backend_movie.add_float("imdb.rating", result.get('rating'))
     backend_movie.add_string("imdb.genre", result.get('genre'))
-    backend_movie.add_string("poster_url", result.get('poster_url'))
-
-    print("BACKEND_MOVIE SAVE!")
+    backend_movie.add_string("imdb.poster_url", result.get('poster_url'))
 
     return imdb_movie
 
@@ -81,11 +79,11 @@ def fetch_tmdb_info(movie):
 
     found = None
     for result in search["results"]:
-        movie = tmdb.Movies(result["id"])
-        result_imdb_id = movie.external_ids()["imdb_id"]
+        result_movie = tmdb.Movies(result["id"])
+        result_imdb_id = result_movie.external_ids()["imdb_id"]
 
         if result_imdb_id == imdb_id:
-            found = movie
+            found = result_movie
             break
     else:
         logger.error("No TMDB movie found with title {0} and IMDB Id: {1}".format(
@@ -134,5 +132,29 @@ def fetch_tmdb_info(movie):
     tmdb_movie.tagline = info["tagline"]
 
     tmdb_movie.save()
+
+    backend_movie = BackendMovie(movie=movie, backend="tmdb")
+    backend_movie.save()
+
+    backend_movie.add_string("imdb_id", info["imdb_id"])
+    backend_movie.add_int("tmdb.id", info["id"])
+    backend_movie.add_string("original_title", info["original_title"])
+    backend_movie.add_string("title", info["title"])
+    backend_movie.add_string("tmdb.popularity", info["popularity"])
+    backend_movie.add_boolean("adult", info["adult"])
+    backend_movie.add_string("spoken_languages", ','.join(spoken_language_names))
+    backend_movie.add_string("homepage", info["homepage"])
+    backend_movie.add_string("synopsis", info["overview"])
+    backend_movie.add_int("tmdb.vote_average", info["vote_average"])
+    backend_movie.add_int("tmdb.vote_count", info["vote_count"])
+    backend_movie.add_int("runtime", info["runtime"])
+    backend_movie.add_int("budget", info["budget"])
+    backend_movie.add_int("revenue", info["revenue"])
+    backend_movie.add_string("genres", ','.join(genre_names))
+    backend_movie.add_string("production_companies", ','.join(production_company_names))
+    backend_movie.add_string("productions_countries", ','.join(productions_country_names))
+    backend_movie.add_string("tmdb.poster_path", info["poster_path"])
+    backend_movie.add_string("tmdb.backdrop_path", info["backdrop_path"])
+    backend_movie.add_string("tagline", info["tagline"])
 
     return tmdb_movie

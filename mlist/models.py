@@ -198,6 +198,9 @@ class BackendMovie(models.Model):
     def add_json(self, key, value):
         BackendMovieJSONAttribute(backend_movie=self, key=key, value=value).save(force_insert=True)
 
+    def add_boolean(self, key, value):
+        BackendMovieBooleanAttribute(backend_movie=self, key=key, value=value).save(force_insert=True)
+
 
 class BackendMovieAttribute(models.Model):
     """
@@ -236,6 +239,10 @@ class BackendMovieDateAttribute(BackendMovieAttribute):
 
 class BackendMovieDateTimeAttribute(BackendMovieAttribute):
     value = models.DateTimeField(blank=False, null=False)
+
+
+class BackendMovieBooleanAttribute(BackendMovieAttribute):
+    value = models.BooleanField(blank=False, null=False)
 
 
 class BackendMovieJSONAttribute(BackendMovieAttribute):
