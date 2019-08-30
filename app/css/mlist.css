@@ -108,7 +108,7 @@ body {
 
 /* When user action are mounted below movie cover,
  * then it should be a bit intended */
-.movei-cover .side-actions {
+.movie-cover .side-actions {
     margin-left: 10px;
     margin-right: 10px;
 }

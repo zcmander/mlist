@@ -40,11 +40,14 @@ class MovieDetail(DetailView):
         context['watchedmics'] = qs.filter(collection__title="watched").all()
         context['collections'] = qs.exclude(collection__title="watched").all()
 
-        context['imdb'] = IMDBMovie.objects \
+        imdb = IMDBMovie.objects \
             .filter(imdb_id=self.object.movie.imdb_id).first()
 
-        context['tmdb'] = TMDBMovie.objects \
+        tmdb = TMDBMovie.objects \
             .filter(imdb_id=self.object.movie.imdb_id).first()
+
+        context["has_imdb"] = imdb is not None
+        context["has_tmdb"] = tmdb is not None
 
         attributes = BackendMovieAttribute.objects \
             .filter(backend_movie__movie=self.object.movie).select_subclasses().all()
@@ -64,9 +67,18 @@ class MovieDetail(DetailView):
             'imdb.poster_url' in attributes_dict,
             'tmdb.poster_path' in attributes_dict
         ])
+
+        poster_url = None
+        if tmdb and tmdb.large_poster_url:
+            poster_url = tmdb.large_poster_url
+        elif imdb and attributes_dict.get('imdb.poster_url'):
+            poster_url = attributes_dict.get('imdb.poster_url')
+        context["poster_url"] = poster_url
+
         context["has_backdrop"] = any([
             'tmdb.backdrop_path' in attributes_dict,
         ])
+        context["backdrop_url"] = tmdb.backdrop_orginal_url if tmdb else None
 
         context["has_overview"] = any([
             attr in attributes_dict
@@ -81,6 +93,26 @@ class MovieDetail(DetailView):
         context["has_share"] = any([
             'imdb_id' in attributes_dict,
         ])
+
+        imdb_rating = None
+        if 'imdb.rating' in attributes_dict:
+            imdb_rating = {
+                'rating': attributes_dict['imdb.rating'],
+                'votes': attributes_dict.get('imdb.votes'),
+            }
+        context['imdb_rating'] = imdb_rating
+
+        tmdb_rating = None
+        if 'tmdb.vote_average' in attributes_dict:
+            tmdb_rating = {
+                'rating': attributes_dict['tmdb.vote_average'],
+                'votes': attributes_dict.get('tmdb.vote_count')
+            }
+        context['tmdb_rating'] = tmdb_rating
+
+        if 'imdb_id' in attributes_dict:
+            context['imdb_url'] = 'http://imdb.com/title/' + attributes_dict['imdb_id']
+            context['facebook_share_url'] = 'http://www.facebook.com/sharer.php?u=' + context['imdb_url']
 
         detail_display = OrderedDict([
             ["director", DisplayAttribute("Director", 'text')],
@@ -101,7 +133,8 @@ class MovieDetail(DetailView):
             detail_display[key].title,
             movie_attributes.get(key),
             detail_display[key].type
-        ) for key in detail_display.keys()]
+        ) for key in detail_display.keys()
+          if key in attributes_dict]
 
         context['debug'] = sorted(attributes_dict.items())
 

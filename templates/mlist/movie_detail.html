@@ -7,11 +7,11 @@ mlist-movie-detail
 {% endblock %}
 {% block container %}
 
-{% if not imdb %}
+{% if not has_imdb %}
     {% include "mlist/includes/detail_no_imdb_info.html" %}
 {% endif %}
 
-{% if not tmdb %}
+{% if not has_tmdb %}
     {% include "mlist/includes/detail_no_tmdb_info.html" %}
 {% endif%}
 
@@ -20,7 +20,7 @@ mlist-movie-detail
     <div class="col-md-4 movie-cover">
         <div class="row">
             <div class="col-6 col-md-12">
-                <img src="{{ tmdb.large_poster_url }}" class="img-fluid" />
+                <img src="{{ poster_url }}" class="img-fluid" />
             </div>
             <div class="col-6 col-md-12">
                 {% include "mlist/includes/detail_user_control.html" %}
@@ -35,15 +35,17 @@ mlist-movie-detail
 <h1 class="page-header movie-title">
     <span class="title">{{attributes.title}}</span>
 
-    <div>
-    {% if attributes.tagline %}
-    <small class="tagline text-white">{{attributes.tagline}}</small>
-    {% endif %}
+    {% if attributes.tagline or attributes.rated %}
+        <div>
+            {% if attributes.tagline %}
+                <small class="tagline text-white">{{attributes.tagline}}</small>
+            {% endif %}
 
-    {% if attributes.rated %}
-    &nbsp;<span class="badge badge-pill badge-secondary">{{attributes.rated}}</span>
+            {% if attributes.rated %}
+                &nbsp;<span class="badge badge-pill badge-secondary">{{attributes.rated}}</span>
+            {% endif %}
+        </div>
     {% endif %}
-    </div>
 </h1>
 
 <div class="row">
@@ -64,9 +66,7 @@ mlist-movie-detail
     </div>
 
     <div class="col-12">
-        {% if imdb or tmdb %}
         {% include "mlist/includes/detail_movie_plot.html" %}
-        {% endif %}
         {% include "mlist/includes/detail_movie_admin.html" %}
     </div>
 </div>

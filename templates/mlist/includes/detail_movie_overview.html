@@ -6,42 +6,50 @@
     <h4>Overview</h4>
 
     <div class="row movie-details">
-        {% if tmdb and imdb.title != tmdb.original_title  %}
+        {% if attributes.title != attributes.original_title %}
             <div class="col-4 title">Orginal Title:</div>
-            <div class="col-8 body">{{tmdb.original_title}}</div>
+            <div class="col-8 body">{{attributes.original_title}}</div>
         {% endif %}
 
-        {% if imdb %}
+        {% if 'released' in attributes %}
             <div class="col-4 title">Released:</div>
-            <div class="col-8 body">{{ imdb.released }} <strong>({{imdb.year}})</strong></div>
+            <div class="col-8 body">
+                {{ attributes.released }}
+
+                {% if 'year' in attributes %}
+                    <strong>({{attributes.year}})</strong>
+                {% endif %}
+            </div>
         {% endif %}
 
-        {% if imdb or tmdb %}
-        <div class="col-4 title">Runtime:</div>
-        <div class="col-8 body">{{imdb.runtime}} ({{tmdb.runtime|default:"Unknown"}} minutes)</div>
+        {% if 'runtime' in attributes %}
+            <div class="col-4 title">Runtime:</div>
+            <div class="col-8 body">{{attributes.runtime}}</div>
+        {% endif %}
 
-        <div class="col-4 title">Genres:</div>
-        <div class="col-8">
-            {% genre_list imdb.genre tmdb.genres %}
-            {% if tmdb.adult %}
-                <span class="badge badge-danger">Adult</span>
-            {% endif %}
-        </div>
+        {% if 'genres' in attributes %}
+            <div class="col-4 title">Genres:</div>
+            <div class="col-8">
+                {% genre_list attributes.genres %}
+                {% if 'adult' in attributes %}
+                    <span class="badge badge-danger">Adult</span>
+                {% endif %}
+            </div>
         {% endif %}
     </div>
 
     <div class="row movie-details">
-        {% if imdb %}
-            <div class="col-6 title">IMDB Rating:</div>
-            <div class="col-6 text-right body" title="({{imdb.votes}} votes)">
-                {% movie_stars imdb.rating %}
+        {% if imdb_rating %}
+            <div class="col-5 title">IMDB Rating:</div>
+            <div class="col-7 text-right body" title="{{imdb_rating.votes}} votes">
+                {% movie_stars imdb_rating.rating %}
             </div>
         {% endif %}
 
-        {% if tmdb %}
-            <div class="col-6 title">TMDB Rating:</div>
-            <div class="col-6 text-right body" title="({{tmdb.vote_count}} votes)">
-                {% movie_stars tmdb.vote_average %}
+        {% if tmdb_rating %}
+            <div class="col-5 title">TMDB Rating:</div>
+            <div class="col-7 text-right body" title="{{tmdb_rating.votes}} votes">
+                {% movie_stars tmdb_rating.rating %}
             </div>
         {% endif %}
     </div>
@@ -52,9 +60,9 @@
 <div class="movie-block">
     <h4>Share</h4>
     <p>
-        {% if mic.movie.imdb_id %}
-            <script>function fbs_click() {u="http://imdb.com/title/{{mic.movie.imdb_id}}";t=document.title;window.open('http://www.facebook.com/sharer.php?u='+encodeURIComponent(u)+'&t='+encodeURIComponent(t),'sharer','toolbar=0,status=0,width=626,height=436');return false;}</script>
-            <a rel="nofollow" href="http://www.facebook.com/sharer.php?u=http://imdb.com/title/{{mic.movie.imdb_id}}" onclick="return fbs_click()" target="_blank" class="fb_share_link btn btn-medium btn-primary"><i class="fa fa-share"></i> Share on Facebook</a>
+        {% if facebook_share_url %}
+            <script>function fbs_click() {u="{{imdb_url}}";t=document.title;window.open('http://www.facebook.com/sharer.php?u='+encodeURIComponent(u)+'&t='+encodeURIComponent(t),'sharer','toolbar=0,status=0,width=626,height=436');return false;}</script>
+            <a rel="nofollow" href="{{facebook_share_url}}" onclick="return fbs_click()" target="_blank" class="fb_share_link btn btn-medium btn-primary"><i class="fa fa-share"></i> Share on Facebook</a>
         {% endif %}
     </p>
 </div>
