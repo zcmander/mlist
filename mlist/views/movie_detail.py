@@ -136,6 +136,6 @@ class MovieDetail(DetailView):
         ) for key in detail_display.keys()
           if key in attributes_dict]
 
-        context['debug'] = sorted(attributes_dict.items())
+        # context['debug'] = sorted(attributes_dict.items())
 
         return context

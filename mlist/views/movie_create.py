@@ -71,9 +71,12 @@ class MovieCreate(FormView):
 
         # Resolve IMDB ID if possible
         if not movie.imdb_id:
-            imdb_id = resolve_imdb_id_by_title(title)
-            if imdb_id:
-                movie.imdb_id = imdb_id
+            try:
+                imdb_id = resolve_imdb_id_by_title(title)
+                if imdb_id:
+                    movie.imdb_id = imdb_id
+            except Exception:
+                pass
 
         # Fetch IMDB Info
         try:

@@ -35,13 +35,13 @@ mlist-movie-detail
 <h1 class="page-header movie-title">
     <span class="title">{{attributes.title}}</span>
 
-    {% if attributes.tagline or attributes.rated %}
+    {% if 'tagline' in attributes or 'rated' in attributes %}
         <div>
-            {% if attributes.tagline %}
+            {% if 'tagline' in attributes %}
                 <small class="tagline text-white">{{attributes.tagline}}</small>
             {% endif %}
 
-            {% if attributes.rated %}
+            {% if 'rated' in attributes %}
                 &nbsp;<span class="badge badge-pill badge-secondary">{{attributes.rated}}</span>
             {% endif %}
         </div>
@@ -51,14 +51,15 @@ mlist-movie-detail
 <div class="row">
 
     {% if not has_poster %}
-        <div class="col-12">
+        <div class="col-lg-6">
             {% include "mlist/includes/detail_user_control.html" %}
+            {% include "mlist/includes/detail_movie_overview.html" %}
+        </div>
+    {% else %}
+        <div class="col-lg-6">
+            {% include "mlist/includes/detail_movie_overview.html" %}
         </div>
     {% endif %}
-
-    <div class="col-lg-6">
-        {% include "mlist/includes/detail_movie_overview.html" %}
-    </div>
 
 
     <div class="col-lg-6">
@@ -71,18 +72,6 @@ mlist-movie-detail
     </div>
 </div>
 
-</div>
-
-<div class="col-12 bg-light">
-
-    <table class="table">
-        {% for key, value in debug %}
-            <tr>
-                <td>{{ key }}</td>
-                <td>{{ value }}</td>
-            </tr>
-        {% endfor %}
-    </table>
 </div>
 
 </div>
