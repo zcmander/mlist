@@ -1,8 +1,15 @@
+from collections import namedtuple, OrderedDict
+
 from django.views.generic import DetailView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
 from mlist.models import MovieInCollection, IMDBMovie, TMDBMovie, BackendMovieAttribute
+
+DisplayAttribute = namedtuple('DisplayAttribute', [
+    'title',
+    'type'
+])
 
 
 class MovieAttributes:
@@ -47,6 +54,12 @@ class MovieDetail(DetailView):
         for attribute in attributes:
             attributes_dict[attribute.key] = attribute.value
 
+        if 'title' not in attributes_dict:
+            attributes_dict["title"] = self.object.movie.title
+
+        movie_attributes = MovieAttributes(attributes_dict)
+        context['attributes'] = movie_attributes
+
         context["has_poster"] = any([
             'imdb.poster_url' in attributes_dict,
             'tmdb.poster_path' in attributes_dict
@@ -65,34 +78,30 @@ class MovieDetail(DetailView):
                 'tmdb.vote_average',
             ]])
 
-        detail_keys = [
-            'director'
-        ]
-
-        context["has_details"] = any([
-            attr in attributes_dict
-            for attr in detail_keys])
-
         context["has_share"] = any([
             'imdb_id' in attributes_dict,
         ])
 
-        if 'title' not in attributes_dict:
-            attributes_dict["title"] = self.object.movie.title
+        detail_display = OrderedDict([
+            ["director", DisplayAttribute("Director", 'text')],
+            ["writer", DisplayAttribute("Writer", 'brlist')],
+            ["actors", DisplayAttribute("Actors", 'brlist')],
+            ["production_companies", DisplayAttribute("Companies", 'brlist')],
+            ["spoken_languages", DisplayAttribute("Spoken languages", 'brlist')],
+            ["homepage", DisplayAttribute("Homepage", 'link')],
+            ["budget", DisplayAttribute("Budget", 'intcomma')],
+            ["revenue", DisplayAttribute("Revenue", 'intcomma')],
+        ])
 
-        movie_attributes = MovieAttributes(attributes_dict)
-        context['attributes'] = movie_attributes
+        context["has_details"] = any([
+            attr in attributes_dict
+            for attr in detail_display.keys()])
 
-        context['details'] = [
-            ("Director", movie_attributes.director, 'text'),
-            ("Writer", movie_attributes.writer, 'brlist'),
-            ("Actors", movie_attributes.actors, 'brlist'),
-            ("Companies", movie_attributes.production_companies, 'brlist'),
-            ("Spoken languages", movie_attributes.spoken_languages, 'brlist'),
-            ("Homepage", movie_attributes.homepage, 'link'),
-            ("Budget", movie_attributes.budget, 'intcomma'),
-            ("Revenue", movie_attributes.revenue, 'intcomma'),
-        ]
+        context['details'] = [(
+            detail_display[key].title,
+            movie_attributes.get(key),
+            detail_display[key].type
+        ) for key in detail_display.keys()]
 
         context['debug'] = sorted(attributes_dict.items())
 
