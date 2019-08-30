@@ -181,24 +181,38 @@ class BackendMovie(models.Model):
     fetched = models.DateTimeField(null=False, auto_now=True)
 
     def add_int(self, key, value):
+        if not value:
+            return
         BackendMovieIntAttribute(backend_movie=self, key=key, value=value).save(force_insert=True)
 
     def add_string(self, key, value):
+        if not value:
+            return
         BackendMovieStringAttribute(backend_movie=self, key=key, value=value).save(force_insert=True)
 
     def add_date(self, key, value):
+        if not value:
+            return
         BackendMovieDateAttribute(backend_movie=self, key=key, value=value).save(force_insert=True)
 
     def add_datetime(self, key, value):
+        if not value:
+            return
         BackendMovieDateTimeAttribute(backend_movie=self, key=key, value=value).save(force_insert=True)
 
     def add_float(self, key, value):
+        if not value:
+            return
         BackendMovieFloatAttribute(backend_movie=self, key=key, value=value).save(force_insert=True)
 
     def add_json(self, key, value):
+        if not value:
+            return
         BackendMovieJSONAttribute(backend_movie=self, key=key, value=value).save(force_insert=True)
 
     def add_boolean(self, key, value):
+        if not value:
+            return
         BackendMovieBooleanAttribute(backend_movie=self, key=key, value=value).save(force_insert=True)
 
 
