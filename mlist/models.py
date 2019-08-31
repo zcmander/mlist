@@ -1,100 +1,15 @@
 import logging
 
-from django.apps import apps
 from django.db import models
 from django.contrib.auth.models import User
 from model_utils.managers import InheritanceManager
 
 from taggit.managers import TaggableManager
 
-from mlist.apps import MListAppConfig
-
-app_config = apps.get_app_config(MListAppConfig.name)
+from mlist.poster import get_poster_url
+from mlist.backdrop import get_backdrop_url
 
 logger = logging.getLogger(__name__)
-
-
-class IMDBMovie(models.Model):
-    imdb_id = models.CharField(max_length=255, unique=True, db_index=True)
-    title = models.CharField(max_length=255)
-    year = models.IntegerField(null=True)
-    rated = models.CharField(max_length=255, null=True)
-    released = models.DateField(null=True)
-    runtime = models.CharField(max_length=255, null=True)
-    director = models.TextField(null=True)
-    writer = models.TextField(null=True)
-    actors = models.TextField(null=True)
-    plot = models.TextField(null=True)
-    votes = models.IntegerField(null=True)
-    rating = models.FloatField(null=True)
-    genre = models.TextField(null=True)
-
-    poster_url = models.CharField(max_length=255, null=True)
-
-    update_date = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        return u"{0} [{1}]".format(self.title, self.imdb_id)
-
-
-class TMDBMovie(models.Model):
-    imdb_id = models.CharField(max_length=255, unique=True, db_index=True)
-    tmdb_id = models.CharField(max_length=255, unique=True)
-
-    original_title = models.CharField(max_length=255)
-    title = models.CharField(max_length=255)
-
-    popularity = models.IntegerField(null=True)
-    adult = models.NullBooleanField()
-    spoken_languages = models.CharField(max_length=255)
-    homepage = models.TextField(null=True)
-    overview = models.TextField(null=True)
-    vote_average = models.IntegerField(null=True)
-    vote_count = models.IntegerField(null=True)
-    runtime = models.IntegerField(null=True)
-    budget = models.IntegerField(null=True)
-    revenue = models.IntegerField(null=True)
-    genres = models.TextField(null=True)
-    production_companies = models.TextField(null=True)
-    productions_countries = models.TextField(null=True)
-    poster_path = models.TextField(null=True)
-    backdrop_path = models.TextField(null=True)
-    tagline = models.TextField(null=False)
-
-    update_date = models.DateTimeField(auto_now=True)
-
-    def get_poster_url(self, size):
-        TMDB_CONFIG = app_config.TMDB_CONFIG
-
-        base_url = TMDB_CONFIG["images"]["secure_base_url"]
-        assert size in TMDB_CONFIG["images"]["poster_sizes"]
-        return base_url + size + self.poster_path
-
-    def get_backdrop_url(self, size):
-        TMDB_CONFIG = app_config.TMDB_CONFIG
-
-        base_url = TMDB_CONFIG["images"]["secure_base_url"]
-        assert size in TMDB_CONFIG["images"]["backdrop_sizes"]
-        return base_url + size + self.backdrop_path
-
-    @property
-    def thumbnail_poster_url(self):
-        return self.get_poster_url("w185")
-
-    @property
-    def large_poster_url(self):
-        return self.get_poster_url("w500")
-
-    @property
-    def backdrop_url(self):
-        return self.get_backdrop_url('w780')
-
-    @property
-    def backdrop_orginal_url(self):
-        return self.get_backdrop_url('original')
-
-    def __str__(self):
-        return u"{0} [{1}]".format(self.title, self.imdb_id)
 
 
 class Movie(models.Model):
@@ -109,35 +24,53 @@ class Movie(models.Model):
     def __str__(self):
         return u'{0} [{1}]'.format(self.title, self.imdb_id)
 
+    def has_backend(self, name):
+        return BackendMovie.objects \
+            .filter(movie=self) \
+            .filter(backend=name) \
+            .first() is not None
+
+    @property
+    def attributes(self):
+        # TODO: Order by backend priority
+        return BackendMovieAttribute.objects \
+            .filter(backend_movie__movie=self) \
+            .select_subclasses()
+
+    def get_attribute(self, key, default=None):
+        attribute = self.attributes.filter(key=key).first()
+        if attribute:
+            return attribute.value
+        return default
+
     @property
     def has_imdb(self):
-        return IMDBMovie.objects.filter(imdb_id=self.imdb_id).first()
+        return self.has_backend("imdb")
 
     @property
     def has_tmdb(self):
-        return TMDBMovie.objects.filter(imdb_id=self.imdb_id).first()
+        return self.has_backend("tmdb")
 
     @property
-    def thumbnail(self):
-        if self.imdb_id:
-            movie = TMDBMovie.objects.filter(imdb_id=self.imdb_id)[:1]
-            if movie:
-                return movie.get().thumbnail_poster_url
+    def thumbnail_url(self):
+        return get_poster_url(self, 'LIST')
 
     @property
-    def year(self):
-        if self.imdb_id:
-            movie = IMDBMovie.objects.filter(imdb_id=self.imdb_id)[:1]
-            if movie:
-                return movie.get().year
-        return ''
+    def poster_url(self):
+        return get_poster_url(self, 'DETAIL')
+
+    @property
+    def backdrop_url(self):
+        return get_backdrop_url(self)
+
+    def get_imdb_id(self):
+        return self.get_attribute("imdb_id", self.imdb_id)
 
     def get_title(self):
-        if self.imdb_id:
-            movie = IMDBMovie.objects.filter(imdb_id=self.imdb_id)[:1]
-            if movie:
-                return movie.get().title
-        return self.title
+        return self.get_attribute("title", self.title)
+
+    def get_year(self):
+        return self.get_attribute("year")
 
 
 class Collection(models.Model):
@@ -179,6 +112,15 @@ class BackendMovie(models.Model):
     backend = models.CharField(max_length=100, null=False)
 
     fetched = models.DateTimeField(null=False, auto_now=True)
+
+    @property
+    def imdb_id(self):
+        attribute = BackendMovieAttribute.objects \
+            .select_subclasses() \
+            .filter(backend_movie=self, key="imdb_id") \
+            .first()
+        if attribute:
+            return attribute.value
 
     def add_int(self, key, value):
         if not value:

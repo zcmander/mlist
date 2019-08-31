@@ -4,7 +4,7 @@ from django.views.generic import DetailView
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 
-from mlist.models import MovieInCollection, IMDBMovie, TMDBMovie, BackendMovieAttribute
+from mlist.models import MovieInCollection
 
 DisplayAttribute = namedtuple('DisplayAttribute', [
     'title',
@@ -35,22 +35,17 @@ class MovieDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super(MovieDetail, self).get_context_data(**kwargs)
 
-        qs = self.object.movie.movieincollection_set
+        movie = self.object.movie
+
+        qs = movie.movieincollection_set
         qs = qs.filter(collection__user=self.request.user)
         context['watchedmics'] = qs.filter(collection__title="watched").all()
         context['collections'] = qs.exclude(collection__title="watched").all()
 
-        imdb = IMDBMovie.objects \
-            .filter(imdb_id=self.object.movie.imdb_id).first()
+        context["has_imdb"] = movie.has_imdb
+        context["has_tmdb"] = movie.has_tmdb
 
-        tmdb = TMDBMovie.objects \
-            .filter(imdb_id=self.object.movie.imdb_id).first()
-
-        context["has_imdb"] = imdb is not None
-        context["has_tmdb"] = tmdb is not None
-
-        attributes = BackendMovieAttribute.objects \
-            .filter(backend_movie__movie=self.object.movie).select_subclasses().all()
+        attributes = movie.attributes
 
         # Convert to dict
         attributes_dict = {}
@@ -58,7 +53,7 @@ class MovieDetail(DetailView):
             attributes_dict[attribute.key] = attribute.value
 
         if 'title' not in attributes_dict:
-            attributes_dict["title"] = self.object.movie.title
+            attributes_dict["title"] = movie.title
 
         movie_attributes = MovieAttributes(attributes_dict)
         context['attributes'] = movie_attributes
@@ -68,17 +63,11 @@ class MovieDetail(DetailView):
             'tmdb.poster_path' in attributes_dict
         ])
 
-        poster_url = None
-        if tmdb and tmdb.large_poster_url:
-            poster_url = tmdb.large_poster_url
-        elif imdb and attributes_dict.get('imdb.poster_url'):
-            poster_url = attributes_dict.get('imdb.poster_url')
-        context["poster_url"] = poster_url
+        context["poster_url"] = movie.poster_url
 
-        context["has_backdrop"] = any([
-            'tmdb.backdrop_path' in attributes_dict,
-        ])
-        context["backdrop_url"] = tmdb.backdrop_orginal_url if tmdb else None
+        backdrop_url = movie.backdrop_url
+        context["has_backdrop"] = backdrop_url is not None
+        context["backdrop_url"] = backdrop_url
 
         context["has_overview"] = any([
             attr in attributes_dict
