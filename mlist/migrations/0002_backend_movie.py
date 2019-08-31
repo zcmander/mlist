@@ -14,23 +14,47 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='BackendMovie',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id',
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID')),
                 ('backend', models.CharField(max_length=100)),
                 ('fetched', models.DateTimeField(auto_now=True)),
-                ('movie', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='backend_movie', to='mlist.Movie')),
+                (
+                    'movie',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name='backend_movie',
+                        to='mlist.Movie')),
             ],
         ),
         migrations.CreateModel(
             name='BackendMovieAttribute',
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                (
+                    'id', models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name='ID')),
                 ('key', models.CharField(max_length=200)),
             ],
         ),
         migrations.CreateModel(
             name='BackendMovieBooleanAttribute',
             fields=[
-                ('backendmovieattribute_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='mlist.BackendMovieAttribute')),
+                (
+                    'backendmovieattribute_ptr',
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to='mlist.BackendMovieAttribute')),
                 ('value', models.BooleanField()),
             ],
             bases=('mlist.backendmovieattribute',),
@@ -38,7 +62,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='BackendMovieDateAttribute',
             fields=[
-                ('backendmovieattribute_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='mlist.BackendMovieAttribute')),
+                (
+                    'backendmovieattribute_ptr',
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to='mlist.BackendMovieAttribute')),
                 ('value', models.DateField()),
             ],
             bases=('mlist.backendmovieattribute',),
@@ -46,7 +78,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='BackendMovieDateTimeAttribute',
             fields=[
-                ('backendmovieattribute_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='mlist.BackendMovieAttribute')),
+                (
+                    'backendmovieattribute_ptr',
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to='mlist.BackendMovieAttribute')),
                 ('value', models.DateTimeField()),
             ],
             bases=('mlist.backendmovieattribute',),
@@ -54,7 +94,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='BackendMovieFloatAttribute',
             fields=[
-                ('backendmovieattribute_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='mlist.BackendMovieAttribute')),
+                (
+                    'backendmovieattribute_ptr',
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to='mlist.BackendMovieAttribute')),
                 ('value', models.FloatField()),
                 ('unit', models.CharField(max_length=200)),
             ],
@@ -63,7 +111,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='BackendMovieIntAttribute',
             fields=[
-                ('backendmovieattribute_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='mlist.BackendMovieAttribute')),
+                (
+                    'backendmovieattribute_ptr',
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to='mlist.BackendMovieAttribute')),
                 ('value', models.IntegerField()),
                 ('unit', models.CharField(max_length=200)),
             ],
@@ -72,7 +128,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='BackendMovieJSONAttribute',
             fields=[
-                ('backendmovieattribute_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='mlist.BackendMovieAttribute')),
+                (
+                    'backendmovieattribute_ptr',
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to='mlist.BackendMovieAttribute')),
                 ('value', models.TextField()),
             ],
             bases=('mlist.backendmovieattribute',),
@@ -80,7 +144,15 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='BackendMovieStringAttribute',
             fields=[
-                ('backendmovieattribute_ptr', models.OneToOneField(auto_created=True, on_delete=django.db.models.deletion.CASCADE, parent_link=True, primary_key=True, serialize=False, to='mlist.BackendMovieAttribute')),
+                (
+                    'backendmovieattribute_ptr',
+                    models.OneToOneField(
+                        auto_created=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        parent_link=True,
+                        primary_key=True,
+                        serialize=False,
+                        to='mlist.BackendMovieAttribute')),
                 ('value', models.TextField()),
             ],
             bases=('mlist.backendmovieattribute',),
@@ -88,7 +160,10 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='backendmovieattribute',
             name='backend_movie',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='attributes', to='mlist.BackendMovie'),
+            field=models.ForeignKey(
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name='attributes',
+                to='mlist.BackendMovie'),
         ),
         migrations.AlterUniqueTogether(
             name='backendmovieattribute',

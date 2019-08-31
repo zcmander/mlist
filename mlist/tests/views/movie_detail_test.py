@@ -35,7 +35,7 @@ class TestMovieDetail(TestCase):
 
         result = view.get_context_data()
 
-        self.assertIsNone(result["imdb"])
-        self.assertIsNone(result["tmdb"])
+        self.assertFalse(result["has_imdb"])
+        self.assertFalse(result["has_tmdb"])
         self.assertEqual(1, len(result["watchedmics"]))
         self.assertEqual(0, len(result["collections"]))
