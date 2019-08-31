@@ -97,27 +97,14 @@ def tag_list(tags):
 
 
 @register.inclusion_tag("mlist/tags/genre_list.html")
-def genre_list(imdb_genres, tmdb_genres):
-    if not imdb_genres:
-        imdb_genres = ""
-    if not tmdb_genres:
-        tmdb_genres = ""
+def genre_list(genres):
+    if not genres:
+        genres = ""
 
-    raw_imdb_genres = set([x.strip() for x in imdb_genres.split(',') if x])
-    raw_tmdb_genres = set([x.strip() for x in tmdb_genres.split(',') if x])
-
-    if 'Science Fiction' in raw_tmdb_genres:
-        raw_tmdb_genres = \
-            (raw_tmdb_genres - set(["Science Fiction"])) | set(["Sci-Fi"])
-
-    set_common_genres = raw_imdb_genres & raw_tmdb_genres
-    set_imdb_genres = raw_imdb_genres - set_common_genres
-    set_tmdb_genres = raw_tmdb_genres - set_common_genres
+    genre_list = set([x.strip() for x in genres.split(',') if x])
 
     return {
-        'common_genres': sorted(set_common_genres),
-        'imdb_genres': sorted(set_imdb_genres),
-        'tmdb_genres': sorted(set_tmdb_genres)
+        'genres': sorted(genre_list),
     }
 
 

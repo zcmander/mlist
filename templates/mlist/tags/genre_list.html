@@ -1,18 +1,5 @@
-{% for genre in common_genres %}
-    <span class="badge badge-dark" title="Genre in IMDB and TMDB">
-        {{genre}}
-    </span>
-{% endfor %}
-
-
-{% for genre in imdb_genres %}
-    <span class="badge badge-success" title="IMDB genre">
-        {{genre}}
-    </span>
-{% endfor %}
-
-{% for genre in tmdb_genres %}
-    <span class="badge badge-warning" title="TMDB genre">
+{% for genre in genres %}
+    <span class="badge badge-dark">
         {{genre}}
     </span>
 {% endfor %}

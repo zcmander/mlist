@@ -1,0 +1,17 @@
+{% load mlist_extras  %}
+{% load humanize %}
+
+<div class="row movie-details">
+    <div class="col-4 title">{{ title }}:</div>
+    <div class="col-8 body">
+        {% if type == 'brlist'%}
+            {% br_list value %}
+        {% elif type == 'intcomma' %}
+            {{ value | intcomma }}
+        {% elif type == 'link' %}
+            {{ value | urlizetrunc:40 }}
+        {% else %}
+            {{ value }}
+        {% endif %}
+    </div>
+</div>

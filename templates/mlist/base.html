@@ -14,8 +14,8 @@
     <link href="{% static 'app.css' %}" rel="stylesheet" type="text/css" />
 </head>
 <body
-{% if mic and tmdb and tmdb.backdrop_url %}
-style='background-size: cover; background-position-x: center; background-image: url("{{tmdb.backdrop_url}}")'
+{% if backdrop_url %}
+style='background-size: cover; background-position-x: center; background-image: url("{{ backdrop_url }}")'
 {% else %}
 style='background-image: url("{% static "img/gradient_squares.png" %}")'
 {% endif %}>

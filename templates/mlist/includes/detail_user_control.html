@@ -35,7 +35,7 @@
     <ul class="mic-list collection-mics">
     {% for collection_mic in collections %}
         <li>
-            <span class="label">{{collection_mic.collection.title}}</span>
+            <span class="badge badge-primary">{{collection_mic.collection.title}}</span>
 
             {% if collection_mic.id == mic.id %}
                 <strong><small>{{collection_mic.date.date}}</small></strong>

@@ -1,18 +1,10 @@
-{% if imdb or tmdb %}
+{% if 'synopsis' in attributes %}
     <div class="movie-block">
-    {% if tmdb %}
         <div>
             <h4>Overview</h4>
-            <blockquote class="muted"><small>{{tmdb.overview}}</small></blockquote>
+            <blockquote class="muted"><small>
+                {{ attributes.synopsis }}
+            </small></blockquote>
         </div>
-    {% endif %}
-
-
-    {% if imdb %}
-        <div>
-            <h4>Plot</h4>
-            <blockquote class="muted"><small>{{imdb.plot}}</small></blockquote>
-        </div>
-    {% endif %}
     </div>
 {% endif %}

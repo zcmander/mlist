@@ -7,20 +7,20 @@ mlist-movie-detail
 {% endblock %}
 {% block container %}
 
-{% if not imdb %}
+{% if not has_imdb %}
     {% include "mlist/includes/detail_no_imdb_info.html" %}
 {% endif %}
 
-{% if not tmdb %}
+{% if not has_tmdb %}
     {% include "mlist/includes/detail_no_tmdb_info.html" %}
 {% endif%}
 
 <div class="row">
-{% if tmdb %}
+{% if has_poster %}
     <div class="col-md-4 movie-cover">
         <div class="row">
             <div class="col-6 col-md-12">
-                <img src="{{ tmdb.large_poster_url }}" class="img-fluid" />
+                <img src="{{ poster_url }}" class="img-fluid" />
             </div>
             <div class="col-6 col-md-12">
                 {% include "mlist/includes/detail_user_control.html" %}
@@ -28,46 +28,50 @@ mlist-movie-detail
         </div>
     </div>
     <div class="col-md-8">
-    {% else %}
+{% else %}
     <div class="offset-2 col-8">
 {% endif %}
 
-<h1 class="page-header movie-title" title="{{mic.movie.title}}">
-    <span class="title">{{mic.movie.get_title}}</span>
+<h1 class="page-header movie-title">
+    <span class="title">{{attributes.title}}</span>
 
-    <div>
-    {% if tmdb.tagline %}
-    <small class="tagline text-white">{{tmdb.tagline}}</small>
+    {% if 'tagline' in attributes or 'rated' in attributes %}
+        <div>
+            {% if 'tagline' in attributes %}
+                <small class="tagline text-white">{{attributes.tagline}}</small>
+            {% endif %}
+
+            {% if 'rated' in attributes %}
+                &nbsp;<span class="badge badge-pill badge-secondary">{{attributes.rated}}</span>
+            {% endif %}
+        </div>
     {% endif %}
-
-    &nbsp;<span class="badge badge-pill badge-secondary">{{imdb.rated}}</span>
-    </div>
 </h1>
 
 <div class="row">
 
-    {% if not tmdb %}
-        <div class="col-12">
+    {% if not has_poster %}
+        <div class="col-lg-6">
             {% include "mlist/includes/detail_user_control.html" %}
+            {% include "mlist/includes/detail_movie_overview.html" %}
+        </div>
+    {% else %}
+        <div class="col-lg-6">
+            {% include "mlist/includes/detail_movie_overview.html" %}
         </div>
     {% endif %}
 
-    {% if imdb or tmdb %}
-    <div class="col-lg-6">
-        {% include "mlist/includes/detail_movie_overview.html" %}
-    </div>
 
     <div class="col-lg-6">
         {% include "mlist/includes/detail_movie_details.html" %}
     </div>
-    {% endif %}
 
     <div class="col-12">
-        {% if imdb or tmdb %}
         {% include "mlist/includes/detail_movie_plot.html" %}
-        {% endif %}
         {% include "mlist/includes/detail_movie_admin.html" %}
     </div>
+</div>
+
 </div>
 
 </div>

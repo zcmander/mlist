@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render_to_response
 from django.db.models import Count
 
-from mlist.models import Movie, IMDBMovie, TMDBMovie
+from mlist.models import Movie, BackendMovie
 
 
 @login_required()
@@ -22,10 +22,10 @@ def settings_view(request):
         sqs = sqs.order_by("-mic_count")
         duplicate_movies.append(sqs.all())
 
-    imdb_ids = [x.imdb_id for x in IMDBMovie.objects.all()]
+    imdb_ids = [x.imdb_id for x in BackendMovie.objects.filter(backend="imdb").all()]
     no_imdb_info = Movie.objects.exclude(imdb_id__in=imdb_ids)
 
-    tmdb_ids = [x.imdb_id for x in TMDBMovie.objects.all()]
+    tmdb_ids = [x.imdb_id for x in BackendMovie.objects.filter(backend="tmdb").all()]
     no_tmdb_info = Movie.objects.exclude(imdb_id__in=tmdb_ids)
 
     render_dict = {

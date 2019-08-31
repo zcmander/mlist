@@ -8,8 +8,8 @@
 <div class="thumbnail">
     <a href="{% url 'detail-movie' mic.id %}">
         {% if mic.movie.imdb_id %}
-          {% if mic.movie.thumbnail %}
-            <img class="media-object" style="max-height:228px; width: auto;" src="{{ mic.movie.thumbnail }}">
+          {% if mic.movie.thumbnail_url %}
+            <img class="media-object" style="max-height:228px; width: auto;" src="{{ mic.movie.thumbnail_url }}">
           {% else %}
             <img class="media-object" src="{% static "img/no-cover.png" %}">
           {% endif %}
@@ -22,7 +22,10 @@
     <div class="caption">
         <h5 class="media-heading">
             <a href="{% url 'detail-movie' mic.id %}">
-                {{ movie.get_title }} <small>{{ movie.year }}</small>
+                {{ movie.get_title }}
+                {% if movie.get_year %}
+                    <small>{{ movie.get_year }}</small>
+                {% endif %}
             </a>
         </h5>
 
