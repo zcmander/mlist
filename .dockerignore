@@ -1,0 +1,6 @@
+node_modules
+dist
+htmlcov
+env
+.vscode
+.tox
