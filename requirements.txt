@@ -3,7 +3,7 @@ django-crispy-forms
 django-tastypie
 django-taggit
 django-debug-toolbar
-django-haystack
+git+https://github.com/django-haystack/django-haystack
 django-model-utils
 python-dotenv
 requests

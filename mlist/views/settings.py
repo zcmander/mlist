@@ -1,6 +1,6 @@
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render_to_response
+from django.shortcuts import redirect, render
 from django.db.models import Count
 
 from mlist.models import Movie, BackendMovie
@@ -36,7 +36,7 @@ def settings_view(request):
         'collections': request.user.collection_set,
         'user': request.user,
     }
-    return render_to_response("mlist/settings.html", render_dict)
+    return render(request, "mlist/settings.html", render_dict)
 
 
 @login_required
